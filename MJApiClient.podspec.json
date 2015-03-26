@@ -6,7 +6,7 @@
   "homepage": "https://github.com/mobilejazz/MJApiClient",
   "license": {
     "type": "Apache License, Version 2.0",
-    "file": "LICENSE.txt"
+    "file": "LICENSE"
   },
   "authors": {
     "Mobile Jazz": "info@mobilejazz.cat"
@@ -17,7 +17,7 @@
   },
   "social_media_url": "http://twitter.com/mobilejazz",
   "source": {
-    "git": "https://github.com/mobilejazz/MJApiClient",
+    "git": "https://github.com/mobilejazz/MJApiClient.git",
     "tag": "0.1.0"
   },
   "source_files": [
