@@ -11,6 +11,10 @@
   "authors": {
     "Mobile Jazz": "info@mobilejazz.cat"
   },
+  "platforms": {
+    "ios": "6.0",
+	"osx": "10.8"
+  },
   "social_media_url": "http://twitter.com/mobilejazz",
   "source": {
     "git": "https://github.com/mobilejazz/MJApiClient",
@@ -19,7 +23,7 @@
   "source_files": [
 	  "Source Code/*.{h,m}", 
 	  "Source Code/*/*.{h,m}"
-  ]
+  ],
   "frameworks": "Foundation",
   "dependencies": {
 	"AFNetworking": [],

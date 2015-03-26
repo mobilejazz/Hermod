@@ -17,7 +17,6 @@
 #import "MJApiClient.h"
 
 #import <AFNetworking/AFNetworking.h>
-#import <AFNetworking/AFNetworkActivityIndicatorManager.h>
 #import <FormatterKit/TTTURLRequestFormatter.h>
 
 #import "MJJSONResponseSerializer.h"
