@@ -108,7 +108,7 @@
         
         if ((_logLevel & MJApiClientLogLevelResponses) != 0)
         {
-            NSLog(@"[ApiClient] RESPONSE: FAILURE\n%@\n\n", response.description);
+            NSLog(@"[ApiClient] RESPONSE: SUCCESS\n%@\n\n", response.description);
         }
         
         if (completionBlock)
@@ -135,7 +135,7 @@
         
         if ((_logLevel & MJApiClientLogLevelResponses) != 0)
         {
-            NSLog(@"[ApiClient] RESPONSE: SUCCESS\n%@\n\n", response.description);
+            NSLog(@"[ApiClient] RESPONSE: FAILURE\n%@\n\n", response.description);
         }
         
         if (completionBlock)
