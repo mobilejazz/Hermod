@@ -16,17 +16,17 @@
 
 #import "MJApiConstants.h"
 
-typedef struct _IntStrPair
+typedef struct ___MJApiIntStrPair
 {
     NSInteger integer;
     char *string;
-} IntStrPair;
+} __MJApiIntStrPair;
 
-NSInteger IntStrPairGetIntegerFromString(IntStrPair array [], NSInteger size, NSString *string)
+NSInteger __MJApiIntStrPairGetIntegerFromString(__MJApiIntStrPair array [], NSInteger size, NSString *string)
 {
     for (int i=0; i<size; ++i)
     {
-        IntStrPair it = array[i];
+        __MJApiIntStrPair it = array[i];
         NSString *str = [[NSString alloc] initWithCString:it.string encoding:NSUTF8StringEncoding];
         
         if ([str isEqualToString:string])
@@ -36,11 +36,11 @@ NSInteger IntStrPairGetIntegerFromString(IntStrPair array [], NSInteger size, NS
     return 0;
 }
 
-NSString *IntStrPairGetStringFromInt(IntStrPair array [], NSInteger size, NSInteger integer)
+NSString* __MJApiIntStrPairGetStringFromInt(__MJApiIntStrPair array [], NSInteger size, NSInteger integer)
 {
     for (int i=0; i<size; ++i)
     {
-        IntStrPair it = array[i];
+        __MJApiIntStrPair it = array[i];
         
         if (it.integer == integer)
         {
@@ -52,7 +52,7 @@ NSString *IntStrPairGetStringFromInt(IntStrPair array [], NSInteger size, NSInte
     return nil;
 }
 
-static IntStrPair HTTPMethodPair [] = {
+static __MJApiIntStrPair HTTPMethodPair [] = {
     {HTTPMethodGET, "GET"},
     {HTTPMethodPOST, "POST"},
     {HTTPMethodPUT, "PUT"},
@@ -60,14 +60,14 @@ static IntStrPair HTTPMethodPair [] = {
     {HTTPMethodHEAD, "HEAD"}
 };
 
-static NSInteger HTTPMethodPairSize = sizeof(HTTPMethodPair)/sizeof(IntStrPair);
+static NSInteger HTTPMethodPairSize = sizeof(HTTPMethodPair)/sizeof(__MJApiIntStrPair);
 
 HTTPMethod HTTPMethodPairFromNSString(NSString *string)
 {
-    return (HTTPMethod)IntStrPairGetIntegerFromString(HTTPMethodPair, HTTPMethodPairSize, string);
+    return (HTTPMethod)__MJApiIntStrPairGetIntegerFromString(HTTPMethodPair, HTTPMethodPairSize, string);
 }
 
 NSString* NSStringFromHTTPMethod(HTTPMethod method)
 {
-    return IntStrPairGetStringFromInt(HTTPMethodPair, HTTPMethodPairSize, method);
+    return __MJApiIntStrPairGetStringFromInt(HTTPMethodPair, HTTPMethodPairSize, method);
 }
