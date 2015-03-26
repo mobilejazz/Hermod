@@ -57,7 +57,8 @@ static __MJApiIntStrPair HTTPMethodPair [] = {
     {HTTPMethodPOST, "POST"},
     {HTTPMethodPUT, "PUT"},
     {HTTPMethodDELETE, "DELETE"},
-    {HTTPMethodHEAD, "HEAD"}
+    {HTTPMethodHEAD, "HEAD"},
+    {HTTPMethodPATCH, "PATCH"}
 };
 
 static NSInteger HTTPMethodPairSize = sizeof(HTTPMethodPair)/sizeof(__MJApiIntStrPair);
