@@ -13,12 +13,7 @@
 
 + (MJApiUploadTask*)taskWithData:(NSData*)data fieldName:(NSString*)fieldName filename:(NSString*)filename mimeType:(NSString*)mimeType
 {
-    MJApiUploadTask *task = [[MJApiUploadTask alloc] init];
-    
-    task.data = data;
-    task.filename = filename;
-    task.mimeType = mimeType;
-    
+    MJApiUploadTask *task = [[MJApiUploadTask alloc] initWithData:data fieldName:fieldName filename:filename mimeType:mimeType];
     return task;
 }
 
