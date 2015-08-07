@@ -21,9 +21,11 @@
 
 #import "MJJSONResponseSerializer.h"
 
+#import "MJHTTPSessionManager.h"
+
 @implementation MJApiClient
 {
-    AFHTTPSessionManager *_httpSessionManager;
+    MJHTTPSessionManager *_httpSessionManager;
     NSMutableDictionary *_tasks;
     
     AFJSONRequestSerializer *_jsonRequestSerializer;
