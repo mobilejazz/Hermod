@@ -46,6 +46,9 @@
         _jsonRequestSerializer = [[AFJSONRequestSerializer alloc] init];
         _jsonResponseSerializer = [[MJJSONResponseSerializer alloc] init];
         
+        // Allowing fragments on json responses.
+        _jsonResponseSerializer.readingOptions = NSJSONReadingAllowFragments;
+        
         // Setting the backend return language
         NSString *language = [[NSLocale preferredLanguages] firstObject];
         [_jsonRequestSerializer setValue:language forHTTPHeaderField:@"Accept-Language"];
