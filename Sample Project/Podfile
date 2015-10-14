@@ -2,21 +2,18 @@ source 'https://github.com/CocoaPods/Specs.git'
 inhibit_all_warnings!
 
 # MJApiClient dependencies
-pod 'AFNetworking', '~> 2.5.1'
+pod 'Motis', '~> 1.4.0'
+pod 'AFNetworking', '~> 2.6.1'
 pod 'FormatterKit/URLRequestFormatter', '~>1.8.0'
 
-# Removing unused localizations from FormatterKit
+# Removing unused localizations
 pre_install do |installer|
-    supported_locales = ['base']
+    supported_locales = ['base', 'en']
     
-    installer.pods.each do |pod|
-        if (pod.name == 'FormatterKit')
-            Dir.glob(File.join(pod.root, '**', '*.lproj')).each do |bundle|
-                if (!supported_locales.include?(File.basename(bundle, ".lproj").downcase))
-                    puts "Removing #{bundle}"
-                    FileUtils.rm_rf(bundle)
-                end
-            end
+    Dir.glob(File.join(installer.sandbox.pod_dir('FormatterKit'), '**', '*.lproj')).each do |bundle|
+        if (!supported_locales.include?(File.basename(bundle, ".lproj").downcase))
+            puts "Removing #{bundle}"
+            FileUtils.rm_rf(bundle)
         end
     end
 end
