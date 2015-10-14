@@ -15,8 +15,31 @@
 //
 
 #import "MJApiSessionOAuth.h"
+#import <Motis/Motis.h>
 
 @implementation MJApiSessionOAuth
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self) {
+        _accessToken = [aDecoder decodeObjectForKey:@"accessToken"];
+        _refreshToken = [aDecoder decodeObjectForKey:@"refreshToken"];
+        _expiryDate = [aDecoder decodeObjectForKey:@"expiryDate"];
+        _tokenType = [aDecoder decodeObjectForKey:@"tokenType"];
+        _scope = [aDecoder decodeObjectForKey:@"scope"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:_accessToken forKey:@"accessToken"];
+    [aCoder encodeObject:_refreshToken forKey:@"refreshToken"];
+    [aCoder encodeObject:_expiryDate forKey:@"expiryDate"];
+    [aCoder encodeObject:_tokenType forKey:@"tokenType"];
+    [aCoder encodeObject:_scope forKey:@"scope"];
+}
 
 #pragma mark Motis Methods
 

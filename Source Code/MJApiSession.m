@@ -18,6 +18,7 @@
 
 #import "MJApiClientKeychainManager.h"
 #import "NSString+MJApiClientMD5Hashing.h"
+#import <Motis/Motis.h>
 
 @interface MJApiSessionConfiguration ()
 

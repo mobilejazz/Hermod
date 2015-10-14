@@ -14,9 +14,9 @@
 // limitations under the License.
 //
 
-#import <Motis/Motis.h>
+#import <Foundation/Foundation.h>
 
-@interface MJApiSessionOAuth : MTSMotisObject
+@interface MJApiSessionOAuth : NSObject <NSCoding>
 
 @property (nonatomic, strong) NSString *accessToken;
 @property (nonatomic, strong) NSString *refreshToken;
