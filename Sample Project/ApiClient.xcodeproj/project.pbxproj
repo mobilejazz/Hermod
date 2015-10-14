@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		798656D645F82E974657C2EB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC53E33C006E2F61BAB99803 /* libPods.a */; };
+		D203B7AB1BCE72F80088C315 /* MJApiSession.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7A81BCE72F80088C315 /* MJApiSession.m */; settings = {ASSET_TAGS = (); }; };
+		D203B7AC1BCE72F80088C315 /* MJApiSessionOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AA1BCE72F80088C315 /* MJApiSessionOAuth.m */; settings = {ASSET_TAGS = (); }; };
+		D203B7AF1BCE74990088C315 /* MJApiClientKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AE1BCE74990088C315 /* MJApiClientKeychainManager.m */; settings = {ASSET_TAGS = (); }; };
 		D20428D21AC400F3002F18FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D20428D11AC400F3002F18FD /* main.m */; };
 		D20428D51AC400F3002F18FD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D20428D41AC400F3002F18FD /* AppDelegate.m */; };
 		D20428D81AC400F3002F18FD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D20428D71AC400F3002F18FD /* ViewController.m */; };
@@ -38,6 +41,12 @@
 /* Begin PBXFileReference section */
 		393DD3AE037FACCDDF86E226 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		482223E83B4EE011134C6956 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		D203B7A71BCE72F80088C315 /* MJApiSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiSession.h; sourceTree = "<group>"; };
+		D203B7A81BCE72F80088C315 /* MJApiSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiSession.m; sourceTree = "<group>"; };
+		D203B7A91BCE72F80088C315 /* MJApiSessionOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiSessionOAuth.h; sourceTree = "<group>"; };
+		D203B7AA1BCE72F80088C315 /* MJApiSessionOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiSessionOAuth.m; sourceTree = "<group>"; };
+		D203B7AD1BCE74990088C315 /* MJApiClientKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiClientKeychainManager.h; sourceTree = "<group>"; };
+		D203B7AE1BCE74990088C315 /* MJApiClientKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiClientKeychainManager.m; sourceTree = "<group>"; };
 		D20428CC1AC400F3002F18FD /* ApiClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApiClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D20428D01AC400F3002F18FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D20428D11AC400F3002F18FD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -186,6 +195,10 @@
 				D20428FF1AC4019D002F18FD /* MJApiResponse.m */,
 				D20429021AC4019D002F18FD /* MJJSONResponseSerializer.h */,
 				D20429031AC4019D002F18FD /* MJJSONResponseSerializer.m */,
+				D203B7A71BCE72F80088C315 /* MJApiSession.h */,
+				D203B7A81BCE72F80088C315 /* MJApiSession.m */,
+				D203B7A91BCE72F80088C315 /* MJApiSessionOAuth.h */,
+				D203B7AA1BCE72F80088C315 /* MJApiSessionOAuth.m */,
 			);
 			name = "Source Code";
 			path = "../../Source Code";
@@ -194,6 +207,8 @@
 		D204290B1AC401D1002F18FD /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				D203B7AD1BCE74990088C315 /* MJApiClientKeychainManager.h */,
+				D203B7AE1BCE74990088C315 /* MJApiClientKeychainManager.m */,
 				D204290C1AC401D1002F18FD /* NSString+MJApiClientMD5Hashing.h */,
 				D204290D1AC401D1002F18FD /* NSString+MJApiClientMD5Hashing.m */,
 			);
@@ -337,14 +352,17 @@
 			files = (
 				D204290E1AC401D1002F18FD /* NSString+MJApiClientMD5Hashing.m in Sources */,
 				D20429041AC4019D002F18FD /* MJApiClient.m in Sources */,
+				D203B7AB1BCE72F80088C315 /* MJApiSession.m in Sources */,
 				D20429061AC4019D002F18FD /* MJApiRequest.m in Sources */,
 				D20429091AC4019D002F18FD /* MJApiUploadRequest.m in Sources */,
 				D20429081AC4019D002F18FD /* MJApiResponse.m in Sources */,
 				D20428D81AC400F3002F18FD /* ViewController.m in Sources */,
+				D203B7AC1BCE72F80088C315 /* MJApiSessionOAuth.m in Sources */,
 				D20428D51AC400F3002F18FD /* AppDelegate.m in Sources */,
 				D20428D21AC400F3002F18FD /* main.m in Sources */,
 				D204290A1AC4019D002F18FD /* MJJSONResponseSerializer.m in Sources */,
 				D20429071AC4019D002F18FD /* MJApiRequestGroup.m in Sources */,
+				D203B7AF1BCE74990088C315 /* MJApiClientKeychainManager.m in Sources */,
 				D20429051AC4019D002F18FD /* MJApiConstants.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
