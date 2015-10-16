@@ -16,12 +16,40 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZlC-1S-td0">
+                                <rect key="frame" x="20" y="84" width="560" height="496"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AWh-T0-Cx1">
+                                <rect key="frame" x="254" y="46" width="92" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Fake Request"/>
+                                <connections>
+                                    <action selector="getFakeRequest:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="A8t-kx-Hne"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AWh-T0-Cx1" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="1fV-Iv-dwK"/>
+                            <constraint firstAttribute="trailing" secondItem="ZlC-1S-td0" secondAttribute="trailing" constant="20" id="25h-sa-NQw"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="ZlC-1S-td0" secondAttribute="bottom" constant="20" id="7JX-vA-iL0"/>
+                            <constraint firstItem="AWh-T0-Cx1" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="26" id="Le9-fm-Hfa"/>
+                            <constraint firstItem="ZlC-1S-td0" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="MGb-XQ-Wv5"/>
+                            <constraint firstItem="ZlC-1S-td0" firstAttribute="top" secondItem="AWh-T0-Cx1" secondAttribute="bottom" constant="8" id="gzp-at-3QF"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="responseTextView" destination="ZlC-1S-td0" id="UoA-JH-lgu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="575" y="462"/>
         </scene>
     </scenes>
 </document>

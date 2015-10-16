@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		529D82861B74F51C00EEC7FB /* MJHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 529D82851B74F51C00EEC7FB /* MJHTTPSessionManager.m */; };
+		529D82861B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 529D82851B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m */; };
 		798656D645F82E974657C2EB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC53E33C006E2F61BAB99803 /* libPods.a */; };
 		D203B7AB1BCE72F80088C315 /* MJApiSession.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7A81BCE72F80088C315 /* MJApiSession.m */; settings = {ASSET_TAGS = (); }; };
 		D203B7AC1BCE72F80088C315 /* MJApiSessionOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AA1BCE72F80088C315 /* MJApiSessionOAuth.m */; settings = {ASSET_TAGS = (); }; };
@@ -42,8 +42,8 @@
 /* Begin PBXFileReference section */
 		393DD3AE037FACCDDF86E226 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		482223E83B4EE011134C6956 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		529D82841B74F51C00EEC7FB /* MJHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJHTTPSessionManager.h; sourceTree = "<group>"; };
-		529D82851B74F51C00EEC7FB /* MJHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJHTTPSessionManager.m; sourceTree = "<group>"; };
+		529D82841B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJHTTPOfflineCacheSessionManager.h; sourceTree = "<group>"; };
+		529D82851B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJHTTPOfflineCacheSessionManager.m; sourceTree = "<group>"; };
 		D203B7A71BCE72F80088C315 /* MJApiSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiSession.h; sourceTree = "<group>"; };
 		D203B7A81BCE72F80088C315 /* MJApiSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiSession.m; sourceTree = "<group>"; };
 		D203B7A91BCE72F80088C315 /* MJApiSessionOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiSessionOAuth.h; sourceTree = "<group>"; };
@@ -198,8 +198,8 @@
 				D20428FF1AC4019D002F18FD /* MJApiResponse.m */,
 				D20429021AC4019D002F18FD /* MJJSONResponseSerializer.h */,
 				D20429031AC4019D002F18FD /* MJJSONResponseSerializer.m */,
-				529D82841B74F51C00EEC7FB /* MJHTTPSessionManager.h */,
-				529D82851B74F51C00EEC7FB /* MJHTTPSessionManager.m */,
+				529D82841B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.h */,
+				529D82851B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m */,
 				D203B7A71BCE72F80088C315 /* MJApiSession.h */,
 				D203B7A81BCE72F80088C315 /* MJApiSession.m */,
 				D203B7A91BCE72F80088C315 /* MJApiSessionOAuth.h */,
@@ -369,7 +369,7 @@
 				D20429071AC4019D002F18FD /* MJApiRequestGroup.m in Sources */,
 				D203B7AF1BCE74990088C315 /* MJApiClientKeychainManager.m in Sources */,
 				D20429051AC4019D002F18FD /* MJApiConstants.m in Sources */,
-				529D82861B74F51C00EEC7FB /* MJHTTPSessionManager.m in Sources */,
+				529D82861B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
