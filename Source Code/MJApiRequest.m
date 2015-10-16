@@ -128,7 +128,12 @@
         };
     });
     
-    NSString *string = [NSString stringWithFormat:@"%@/%lu/%@", _path, (unsigned long)_httpMethod, stringForDictionary(_parameters)];
+    NSString *string;
+    if ([_parameters isKindOfClass:[NSDictionary class]])
+        string = [NSString stringWithFormat:@"%@/%lu/%@", _path, (unsigned long)_httpMethod, stringForDictionary(_parameters)];
+    else
+        string = [NSString stringWithFormat:@"%@/%lu/%@", _path, (unsigned long)_httpMethod, _parameters];
+
     return [string md5_stringWithMD5Hash];
 }
 

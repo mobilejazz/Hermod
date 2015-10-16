@@ -1,0 +1,73 @@
+//
+// Copyright 2015 Mobile Jazz SL
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#import "MJApiSessionOAuth.h"
+#import <Motis/Motis.h>
+
+@implementation MJApiSessionOAuth
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self) {
+        _accessToken = [aDecoder decodeObjectForKey:@"accessToken"];
+        _refreshToken = [aDecoder decodeObjectForKey:@"refreshToken"];
+        _expiryDate = [aDecoder decodeObjectForKey:@"expiryDate"];
+        _tokenType = [aDecoder decodeObjectForKey:@"tokenType"];
+        _scope = [aDecoder decodeObjectForKey:@"scope"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:_accessToken forKey:@"accessToken"];
+    [aCoder encodeObject:_refreshToken forKey:@"refreshToken"];
+    [aCoder encodeObject:_expiryDate forKey:@"expiryDate"];
+    [aCoder encodeObject:_tokenType forKey:@"tokenType"];
+    [aCoder encodeObject:_scope forKey:@"scope"];
+}
+
+#pragma mark Motis Methods
+
++ (NSDictionary *)mts_mapping {
+    return @{@"access_token": mts_key(accessToken),
+             @"refresh_token": mts_key(refreshToken),
+             @"expires_in": mts_key(expiryDate),
+             @"token_type": mts_key(tokenType),
+             @"scope": mts_key(scope),
+             };
+}
+
+- (void)setNilValueForKey:(NSString *)key {
+    // Avoid crash when receiving "null" for a non object property type
+}
+
+- (BOOL)validateExpiryDate:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
+    // Converting the expires_in value (numeric value in seconds) to a date of expiry.
+    if ([*ioValue isKindOfClass:NSNumber.class])
+        *ioValue = [NSDate dateWithTimeIntervalSinceNow:[*ioValue floatValue]];
+    
+    return [*ioValue isKindOfClass:NSDate.class];
+}
+
+#pragma mark Public Methods
+
+- (BOOL)isValid {
+    return _accessToken.length > 0 && _expiryDate.timeIntervalSinceNow > 60;
+}
+
+@end
