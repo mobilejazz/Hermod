@@ -13,7 +13,7 @@
  *  support for offline caching and server side cache
  */
 
-@interface MJHTTPSessionManager : AFHTTPSessionManager
+@interface MJHTTPOfflineCacheSessionManager : AFHTTPSessionManager
 
 /**
  *  Creates the default shared operation manager

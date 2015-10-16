@@ -8,14 +8,14 @@
 
 #import "MJHTTPSessionManager.h"
 
-@implementation MJHTTPSessionManager
+@implementation MJHTTPOfflineCacheSessionManager
 
 + (instancetype)sharedOperationManager
 {
-    static MJHTTPSessionManager *_sharedOperationManager = nil;
+    static MJHTTPOfflineCacheSessionManager *_sharedOperationManager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedOperationManager = (MJHTTPSessionManager *) [[[self class] alloc] init];
+        _sharedOperationManager = (MJHTTPOfflineCacheSessionManager *) [[[self class] alloc] init];
     });
     
     return _sharedOperationManager;
@@ -25,8 +25,39 @@
 {
     self = [super init];
     
-    if (self) {
-        
+    if (self)
+    {
+        [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    }
+    return self;
+}
+
+- (instancetype)initWithBaseURL:(NSURL *)url
+{
+    self = [super initWithBaseURL:url];
+    if (self)
+    {
+         [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    }
+    return self;
+}
+
+- (instancetype)initWithBaseURL:(NSURL *)url sessionConfiguration:(NSURLSessionConfiguration *)configuration {
+    self = [super initWithBaseURL:url sessionConfiguration:configuration];
+    if (self)
+    {
+        [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    }
+    return self;
+}
+
+- (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)configuration
+{
+    self = [super initWithSessionConfiguration:configuration];
+    
+    if (self)
+    {
+        [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     }
     return self;
 }
@@ -52,7 +83,7 @@
             break;
     }
     
-    return [super dataTaskWithRequest:request completionHandler:completionHandler];
+    return [super dataTaskWithRequest:copyRequest completionHandler:completionHandler];
 }
 
 @end
