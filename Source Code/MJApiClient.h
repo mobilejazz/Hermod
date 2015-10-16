@@ -23,6 +23,11 @@
 
 #define LOG_REQUESTS (1 && DEBUG)
 
+typedef NS_ENUM(NSInteger, MJApiClientCacheManagement) {
+    MJApiClientCacheManagementDefault,
+    MJApiClientCacheManagementOffline
+};
+
 typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
 {
     MJApiClientLogLevelNone         = 0,
@@ -33,6 +38,14 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
 typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
 
 @protocol MJApiClientDelegate;
+
+@interface MJAPiClientConfigurator : NSObject
+
+@property (nonatomic, assign, readwrite) MJApiClientCacheManagement cacheManagement;
+@property (nonatomic, strong, readwrite) NSString *host;
+@property (nonatomic, strong, readwrite) NSString *apiPath;
+
+@end
 
 /**
  * An API client.
@@ -46,11 +59,20 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
  ** ************************************************************************************************ **/
 
 /**
- * Default initializer.
+ * Deprecated initializer.
  * @param host The host.
+ * @param apiPath Additiona API route
  * @return An initialized instance.
  **/
-- (id)initWithHost:(NSString*)host;
+- (id)initWithHost:(NSString*)host apiPath:(NSString *)apiPath;
+
+
+/**
+ *  Designated initializer.
+ *  @param configuratorBlock A MJApiClientConfigurator block
+ *  @return The instance initialized
+ */
+- (id)initWithConfigurator:(void (^)(MJAPiClientConfigurator *configurator))configuratorBlock;
 
 /** ************************************************************************************************ **
  * @name Configuring the client
@@ -63,8 +85,9 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
 
 /**
  * An aditional API route path to be inserted after the host and before the REST arguments.
+ * @discussion Must be prefixed with "/"
  **/
-@property (nonatomic, strong) NSString *apiPath;
+@property (nonatomic, strong, readonly) NSString *apiPath;
 
 /** ************************************************************************************************ **
  * @name Authorization Headers

@@ -21,11 +21,21 @@
 
 #import "MJJSONResponseSerializer.h"
 
-#import "MJHTTPSessionManager.h"
+#import "MJHTTPOfflineCacheSessionManager.h"
+
+@implementation MJAPiClientConfigurator
+
+@end
+
+@interface MJApiClient ()
+
+@property (nonatomic, strong, readwrite) NSString *apiPath;
+
+@end
 
 @implementation MJApiClient
 {
-    MJHTTPSessionManager *_httpSessionManager;
+    AFHTTPSessionManager *_httpSessionManager;
     NSMutableDictionary *_tasks;
     
     AFJSONRequestSerializer *_jsonRequestSerializer;
@@ -34,15 +44,28 @@
 
 - (id)init
 {
-    return [self initWithHost:nil];
+    return [self initWithHost:nil apiPath:nil];
 }
 
-- (id)initWithHost:(NSString*)host;
+- (id)initWithHost:(NSString*)host apiPath:(NSString *)apiPath
+{
+    return [self initWithConfigurator:^(MJAPiClientConfigurator *configurator) {
+        configurator.apiPath = apiPath;
+        configurator.host = host;
+        configurator.cacheManagement = MJApiClientCacheManagementDefault;
+    }];
+}
+
+- (id)initWithConfigurator:(void (^)(MJAPiClientConfigurator *configurator))configuratorBlock;
 {
     self = [super init];
     if (self)
     {
-        _host = host;
+        MJAPiClientConfigurator *configurator = [MJAPiClientConfigurator new];
+        configuratorBlock (configurator);
+        
+        _host = configurator.host;
+        _apiPath = configurator.apiPath;
         _tasks = [NSMutableDictionary dictionary];
         
         _jsonRequestSerializer = [[AFJSONRequestSerializer alloc] init];
@@ -55,14 +78,20 @@
         NSString *language = [[NSLocale preferredLanguages] firstObject];
         [_jsonRequestSerializer setValue:language forHTTPHeaderField:@"Accept-Language"];
         
-        _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
+        if (configurator.cacheManagement == MJApiClientCacheManagementOffline)
+        {
+            _httpSessionManager = [[MJHTTPOfflineCacheSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
+        }
+        else
+        {
+            _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
+        }
         _httpSessionManager.requestSerializer = _jsonRequestSerializer;
         _httpSessionManager.responseSerializer = _jsonResponseSerializer;
     }
     return self;
 }
 
-//#pragma mark Properties
 
 #pragma mark Public Methods
 

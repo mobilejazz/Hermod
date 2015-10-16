@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Mobile Jazz. All rights reserved.
 //
 
-#import "MJHTTPSessionManager.h"
+#import "MJHTTPOfflineCacheSessionManager.h"
 
 @implementation MJHTTPOfflineCacheSessionManager
 
