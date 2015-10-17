@@ -18,11 +18,12 @@
 
 #import "MJApiClient.h"
 #import "MJApiSessionOAuth.h"
+#import "MJApiRequestExecutor.h"
 
 /**
  * This class collects all the information related to configuring an API client together wit the API session management.
  **/
-@interface MJApiSessionConfiguration : NSObject <NSCopying, NSMutableCopying>
+@interface MJApiSessionConfiguration : NSObject
 
 /**
  * The API client.
@@ -88,7 +89,7 @@ typedef NS_ENUM(NSUInteger, MJApiSessionAccess)
 /**
  * This class manages the OAuth session of an API client (MJApiClient).
  **/
-@interface MJApiSession : NSObject
+@interface MJApiSession : NSObject <MJApiRequestExecutor>
 
 /** ************************************************************************************************ **
  * @name Initializers

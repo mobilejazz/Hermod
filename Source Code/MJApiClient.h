@@ -19,7 +19,7 @@
 #import "MJApiRequest.h"
 #import "MJApiUploadRequest.h"
 #import "MJApiResponse.h"
-#import "MJApiRequestGroup.h"
+#import "MJApiRequestExecutor.h"
 
 /**
  * Cache managmenet flags.
@@ -47,8 +47,6 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
     /** Responses will be logged. */
     MJApiClientLogLevelResponses    = 1 << 1,
 };
-
-typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
 
 @protocol MJApiClientDelegate;
 
@@ -90,7 +88,7 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
  * This class build on top of AFNetworking a user-friendly interface to manage API requests and responses. 
  * The only constraint is that the backend services must always accept and return application/json HTTP requests and responses.
  **/
-@interface MJApiClient : NSObject
+@interface MJApiClient : NSObject <MJApiRequestExecutor>
 
 /** ************************************************* **
  * @name Getting the default manager
@@ -162,60 +160,6 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
  * Delegate object.
  **/
 @property (nonatomic, weak) id <MJApiClientDelegate> delegate;
-
-/** ************************************************* **
- * @name Managing Requests
- ** ************************************************* **/
-
-/**
- * Performs an API request and call the completion block when finish.
- * @param request The API request.
- * @param completionBlock A completion block.
- * @return The task identifier.
- **/
-- (NSInteger)performRequest:(MJApiRequest*)request completionBlock:(MJApiResponseBlock)completionBlock;
-
-/**
- * Performs an API request and call the completion block when finish.
- * @param request The API request.
- * @param apiPath A custom API path (to be used instead of the default one).
- * @param completionBlock A completion block.
- * @return The task identifier.
- **/
-- (NSInteger)performRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath completionBlock:(MJApiResponseBlock)completionBlock;
-
-/**
- * Cancel the request for the given identifier.
- * @param identifier The request identifier.
- **/
-- (void)cancelRequestWithIdentifier:(NSInteger)identifier;
-
-/**
- * Suspends the request for the given identifier.
- * @param identifier The request identifier.
- **/
-- (void)suspendRequestWithIdentifier:(NSInteger)identifier;
-
-/**
- * Resumes the request for the given identifier.
- * @param identifier The request identifier.
- **/
-- (void)resumeRequestWithIdentifier:(NSInteger)identifier;
-
-/**
- * Cancels all requests.
- **/
-- (void)cancelAllRequests;
-
-/**
- * Suspends all requests.
- **/
-- (void)suspendAllRequests;
-
-/**
- * Resumes all supspended requests.
- **/
-- (void)resumeAllRequests;
 
 /** ************************************************* **
  * @name Logging
