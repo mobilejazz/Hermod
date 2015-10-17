@@ -21,16 +21,13 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - FormatterKit/URLRequestFormatter (1.8.0)
-  - Motis (1.4.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.6.1)
   - FormatterKit/URLRequestFormatter (~> 1.8.0)
-  - Motis (~> 1.4.0)
 
 SPEC CHECKSUMS:
   AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
   FormatterKit: bddde83e054edf9d9ee14f9de3b3a5103db256f4
-  Motis: 107a32fd0b6f026077bc31e5a846b45c0c548f55
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0

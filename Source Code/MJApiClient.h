@@ -21,17 +21,30 @@
 #import "MJApiResponse.h"
 #import "MJApiRequestGroup.h"
 
-#define LOG_REQUESTS (1 && DEBUG)
-
-typedef NS_ENUM(NSInteger, MJApiClientCacheManagement) {
+/**
+ * Cache managmenet flags.
+ **/
+typedef NS_ENUM(NSInteger, MJApiClientCacheManagement)
+{
+    /** Default cache management. */
     MJApiClientCacheManagementDefault,
+    
+    /** When offline (no reachability to the internet), cache will be used. */
     MJApiClientCacheManagementOffline
 };
 
+/**
+ * Debug logs flags.
+ **/
 typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
 {
+    /** No logs will be done. */
     MJApiClientLogLevelNone         = 0,
+    
+    /** Requests will be logged (including a curl). */
     MJApiClientLogLevelRequests     = 1 << 0,
+    
+    /** Responses will be logged. */
     MJApiClientLogLevelResponses    = 1 << 1,
 };
 
@@ -39,13 +52,38 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
 
 @protocol MJApiClientDelegate;
 
+/* ************************************************************************************************** */
+#pragma mark -
+
+/**
+ * The configurator object.
+ **/
 @interface MJAPiClientConfigurator : NSObject
 
-@property (nonatomic, assign, readwrite) MJApiClientCacheManagement cacheManagement;
+/** ************************************************* **
+ * @name Configurable properties
+ ** ************************************************* **/
+
+/**
+ * The host of the API client. Default value is nil.
+ **/
 @property (nonatomic, strong, readwrite) NSString *host;
+
+/**
+ * An aditional API route path to be inserted after the host and before the REST arguments. Default value is nil.
+ * @discussion Must be prefixed with "/"
+ **/
 @property (nonatomic, strong, readwrite) NSString *apiPath;
 
+/**
+ * The cache managemenet strategy. Default value is `MJApiClientCacheManagementDefault`.
+ **/
+@property (nonatomic, assign, readwrite) MJApiClientCacheManagement cacheManagement;
+
 @end
+
+/* ************************************************************************************************** */
+#pragma mark -
 
 /**
  * An API client.
@@ -54,9 +92,9 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
  **/
 @interface MJApiClient : NSObject
 
-/** ************************************************************************************************ **
+/** ************************************************* **
  * @name Getting the default manager
- ** ************************************************************************************************ **/
+ ** ************************************************* **/
 
 /**
  * Deprecated initializer.
@@ -74,9 +112,9 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
  */
 - (id)initWithConfigurator:(void (^)(MJAPiClientConfigurator *configurator))configuratorBlock;
 
-/** ************************************************************************************************ **
+/** ************************************************* **
  * @name Configuring the client
- ** ************************************************************************************************ **/
+ ** ************************************************* **/
 
 /**
  * The host of the API client.
@@ -89,9 +127,14 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
  **/
 @property (nonatomic, strong, readonly) NSString *apiPath;
 
-/** ************************************************************************************************ **
+/**
+ * The cache managemenet strategy.
+ **/
+@property (nonatomic, assign, readonly) MJApiClientCacheManagement cacheManagement;
+
+/** ************************************************* **
  * @name Authorization Headers
- ** ************************************************************************************************ **/
+ ** ************************************************* **/
 
 /**
  * Set a barear token (typically from OAuth access tokens).
@@ -111,18 +154,18 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
  **/
 - (void)removeAuthorizationHeaders;
 
-/** ************************************************************************************************ **
+/** ************************************************* **
  * @name Delegate
- ** ************************************************************************************************ **/
+ ** ************************************************* **/
 
 /**
  * Delegate object.
  **/
 @property (nonatomic, weak) id <MJApiClientDelegate> delegate;
 
-/** ************************************************************************************************ **
+/** ************************************************* **
  * @name Managing Requests
- ** ************************************************************************************************ **/
+ ** ************************************************* **/
 
 /**
  * Performs an API request and call the completion block when finish.
@@ -174,9 +217,9 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
  **/
 - (void)resumeAllRequests;
 
-/** ************************************************************************************************ **
+/** ************************************************* **
  * @name Logging
- ** ************************************************************************************************ **/
+ ** ************************************************* **/
 
 /**
  * The log level of the api client. Default value is `MJApiClientLogLevelNone`.
@@ -185,14 +228,34 @@ typedef void (^MJApiResponseBlock)(MJApiResponse *response, NSInteger key);
 
 @end
 
+/* ************************************************************************************************** */
+#pragma mark -
 
 /**
  * Delegate of an API client.
  **/
 @protocol MJApiClientDelegate <NSObject>
 
+/** ************************************************* **
+ * @name Managing errors
+ ** ************************************************* **/
+
 @optional
+/**
+ * By implementing this method, the delegate thas the oportunity to create custom errors depending on the incoming resposne body or the incoming error.
+ * @param apiClient The API client.
+ * @param responseBody The resposne body (can be nil).
+ * @param error The incoming error (can be nil).
+ * @discussion This method is called for every succed and failed api response. Either the response body is not nil, the error is not nil or bot hare not nil.
+ **/
 - (NSError*)apiClient:(MJApiClient*)apiClient errorForResponseBody:(NSDictionary*)responseBody incomingError:(NSError*)error;
+
+/**
+ * Notifies the delegate that an api response has got an error.
+ * @param apiClient The API client.
+ * @param response The API response with an error.
+ **/
+- (void)apiClient:(MJApiClient*)apiClient didReceiveErrorInResponse:(MJApiResponse*)response;
 
 @end
 

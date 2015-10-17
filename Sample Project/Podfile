@@ -2,7 +2,6 @@ source 'https://github.com/CocoaPods/Specs.git'
 inhibit_all_warnings!
 
 # MJApiClient dependencies
-pod 'Motis', '~> 1.4.0'
 pod 'AFNetworking', '~> 2.6.1'
 pod 'FormatterKit/URLRequestFormatter', '~>1.8.0'
 

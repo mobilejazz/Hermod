@@ -18,88 +18,49 @@
 
 #import "MJApiClientKeychainManager.h"
 #import "NSString+MJApiClientMD5Hashing.h"
-#import <Motis/Motis.h>
 
-@interface MJApiSessionConfiguration ()
-
-@property (nonatomic, strong, readwrite) MJApiClient *apiClient;
-@property (nonatomic, copy, readwrite) NSString *apiOAuthPath;
-@property (nonatomic, copy, readwrite) NSString *clientId;
-@property (nonatomic, copy, readwrite) NSString *clientSecret;
-
-- (NSString*)identifier;
-
-@end
-
-@implementation MJApiSessionConfiguration
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    MJApiSessionConfiguration *configuration = [[MJApiSessionConfiguration allocWithZone:zone] init];
-    
-    configuration.apiClient = _apiClient;
-    configuration.apiOAuthPath = _apiOAuthPath;
-    configuration.clientId = _clientId;
-    configuration.clientSecret = _clientSecret;
-    
-    return configuration;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone
-{
-    MJMutableApiSessionConfiguration *configuration = [[MJMutableApiSessionConfiguration allocWithZone:zone] init];
-    
-    configuration.apiClient = _apiClient;
-    configuration.apiOAuthPath = _apiOAuthPath;
-    configuration.clientId = _clientId;
-    configuration.clientSecret = _clientSecret;
-    
-    return configuration;
-}
-
-- (NSString*)identifier
-{
-    NSString *string = [NSString stringWithFormat:@"host:%@::clientId:%@", _apiClient.host, _clientId];
-    NSString *md5 = [string md5_stringWithMD5Hash];
-    return md5;
-}
-
-@end
-
-@implementation MJMutableApiSessionConfiguration
-
-@dynamic apiClient;
-@dynamic apiOAuthPath;
-@dynamic clientId;
-@dynamic clientSecret;
+@implementation MJApiSessionConfigurator
 
 @end
 
 @implementation MJApiSession
 {
     NSOperationQueue *_requestOperationQueue;
-    MJApiSessionConfiguration *_configuration;
+    
+    MJApiClient *_apiClient;
+    NSString *_apiOAuthPath;
+    NSString *_clientId;
+    NSString *_clientSecret;
+    
+    NSString *_identifier;
 }
 
 - (id)init
 {
-    return [self initWithConfigurationBlock:nil];
+    return [self initWithConfigurator:nil];
 }
 
-- (id)initWithConfigurationBlock:(void (^)(MJMutableApiSessionConfiguration *configuration))configurationBlock
+- (id)initWithConfigurator:(void (^)(MJApiSessionConfigurator *configurator))configuratorBlock;
 {
     self = [super init];
     if (self)
     {
-        MJMutableApiSessionConfiguration *configuration = [[MJMutableApiSessionConfiguration alloc] init];
-        if (configurationBlock)
-            configurationBlock(configuration);
-        _configuration = [configuration copy];
+        MJApiSessionConfigurator *configurator = [[MJApiSessionConfigurator alloc] init];
+        if (configuratorBlock)
+            configuratorBlock(configurator);
         
         // One request at a time.
         _requestOperationQueue = [[NSOperationQueue alloc] init];
         _requestOperationQueue.maxConcurrentOperationCount = 1;
-                
+        
+        _apiClient = configurator.apiClient;
+        _apiOAuthPath = configurator.apiOAuthPath;
+        _clientId = configurator.clientId;
+        _clientSecret = configurator.clientSecret;
+        
+        NSString *string = [NSString stringWithFormat:@"host:%@::clientId:%@", _apiClient.host, _clientId];
+        _identifier = [string md5_stringWithMD5Hash];
+
         [self mjz_load];
     }
     return self;
@@ -119,11 +80,6 @@
     _oauthForUserAccess = oauthForUserAccess;
     [self mjz_refreshApiClientAuthorization];
     [self mjz_save];
-}
-
-- (MJApiClient*)apiClient
-{
-    return _configuration.apiClient;
 }
 
 #pragma mark Public Methods
@@ -213,26 +169,24 @@
 {
     NSAssert(username != nil, @"username cannot be nil.");
     NSAssert(password != nil, @"password cannot be nil.");
-    NSAssert(_configuration.apiOAuthPath != nil, @"API OAuth path is not set.");
-    NSAssert(_configuration.clientId != nil, @"client id is not set.");
-    NSAssert(_configuration.clientSecret != nil, @"client secret is not set.");
+    NSAssert(_apiOAuthPath != nil, @"API OAuth path is not set.");
+    NSAssert(_clientId != nil, @"client id is not set.");
+    NSAssert(_clientSecret != nil, @"client secret is not set.");
     
-    MJApiRequest *request = [MJApiRequest requestWithPath:_configuration.apiOAuthPath];
+    MJApiRequest *request = [MJApiRequest requestWithPath:_apiOAuthPath];
     request.httpMethod = HTTPMethodPOST;
     request.parameters = @{@"username": username,
                            @"password": password,
                            @"grant_type": @"password",
-                           @"client_id": _configuration.clientId,
-                           @"client_secret": _configuration.clientSecret,
+                           @"client_id": _clientId,
+                           @"client_secret": _clientSecret,
                            };
     
     [self validateOAuth:^{
-        [_configuration.apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
+        [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
             if (response.error == nil)
             {
-                MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] init];
-                [oauth mts_setValuesForKeysWithDictionary:response.responseObject];
-                
+                MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
                 self.oauthForUserAccess = oauth;
                 
                 if (completionBlock)
@@ -251,35 +205,34 @@
 
 - (NSString*)mjz_keychainOAuthAppKey
 {
-    NSString *key = [NSString stringWithFormat:@"%@.oauth.app", _configuration.identifier];
+    NSString *key = [NSString stringWithFormat:@"%@.oauth.app", _identifier];
     return key;
 }
 
 - (NSString*)mjz_keychainOAuthUserKey
 {
-    NSString *key = [NSString stringWithFormat:@"%@.oauth.user", _configuration.identifier];
+    NSString *key = [NSString stringWithFormat:@"%@.oauth.user", _identifier];
     return key;
 }
 
 - (void)mjz_refreshToken:(NSString*)refreshToken completionBlock:(void (^)(MJApiSessionOAuth *oauth, NSError *error))completionBlock
 {
-    NSAssert(_configuration.apiOAuthPath != nil, @"API OAuth path is not set.");
-    NSAssert(_configuration.clientId != nil, @"client id is not set.");
-    NSAssert(_configuration.clientSecret != nil, @"client secret is not set.");
+    NSAssert(_apiOAuthPath != nil, @"API OAuth path is not set.");
+    NSAssert(_clientId != nil, @"client id is not set.");
+    NSAssert(_clientSecret != nil, @"client secret is not set.");
     
-    MJApiRequest *request = [MJApiRequest requestWithPath:_configuration.apiOAuthPath];
+    MJApiRequest *request = [MJApiRequest requestWithPath:_apiOAuthPath];
     request.httpMethod = HTTPMethodPOST;
     request.parameters = @{@"grant_type": @"refresh_token",
                            @"refresh_token": refreshToken,
-                           @"client_id": _configuration.clientId,
-                           @"client_secret": _configuration.clientSecret,
+                           @"client_id": _clientId,
+                           @"client_secret": _clientSecret,
                            };
     
-    [_configuration.apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
+    [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
         if (response.error == nil)
         {
-            MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] init];
-            [oauth mts_setValuesForKeysWithDictionary:response.responseObject];
+            MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
             
             if (completionBlock)
                 completionBlock(oauth, nil);
@@ -294,22 +247,21 @@
 
 - (void)mjz_clientCredentialsWithCompletionBlock:(void (^)(MJApiSessionOAuth *oauth, NSError *error))completionBlock
 {
-    NSAssert(_configuration.apiOAuthPath != nil, @"API OAuth path is not set.");
-    NSAssert(_configuration.clientId != nil, @"client id is not set.");
-    NSAssert(_configuration.clientSecret != nil, @"client secret is not set.");
+    NSAssert(_apiOAuthPath != nil, @"API OAuth path is not set.");
+    NSAssert(_clientId != nil, @"client id is not set.");
+    NSAssert(_clientSecret != nil, @"client secret is not set.");
     
-    MJApiRequest *request = [MJApiRequest requestWithPath:_configuration.apiOAuthPath];
+    MJApiRequest *request = [MJApiRequest requestWithPath:_apiOAuthPath];
     request.httpMethod = HTTPMethodPOST;
     request.parameters = @{@"grant_type": @"client_credentials",
-                           @"client_id": _configuration.clientId,
-                           @"client_secret": _configuration.clientSecret,
+                           @"client_id": _clientId,
+                           @"client_secret": _clientSecret,
                            };
     
-    [_configuration.apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
+    [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
         if (response.error == nil)
         {
-            MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] init];
-            [oauth mts_setValuesForKeysWithDictionary:response.responseObject];
+            MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
             
             if (completionBlock)
                 completionBlock(oauth, nil);
@@ -388,9 +340,9 @@
     
     // Set the oauth authorization headers
     if (oauth)
-        [_configuration.apiClient setBearerToken:oauth.accessToken];
+        [_apiClient setBearerToken:oauth.accessToken];
     else
-        [_configuration.apiClient removeAuthorizationHeaders];
+        [_apiClient removeAuthorizationHeaders];
     
     // update the session access flag
     [self willChangeValueForKey:@"sessionAccess"];
@@ -403,7 +355,7 @@
     static NSString *service = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        service = [NSString stringWithFormat:@"%@.%@",[[NSBundle mainBundle] bundleIdentifier], _configuration.identifier];
+        service = [NSString stringWithFormat:@"%@.%@",[[NSBundle mainBundle] bundleIdentifier], _identifier];
     });
     
     MJApiClientKeychainManager *manager = [MJApiClientKeychainManager managerForService:service];

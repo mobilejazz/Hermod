@@ -18,11 +18,13 @@
 
 @interface MJApiSessionOAuth : NSObject <NSCoding>
 
-@property (nonatomic, strong) NSString *accessToken;
-@property (nonatomic, strong) NSString *refreshToken;
-@property (nonatomic, strong) NSDate *expiryDate;
-@property (nonatomic, strong) NSString *tokenType;
-@property (nonatomic, strong) NSString *scope;
+- (id)initWithDictionary:(NSDictionary*)dictionary;
+
+@property (nonatomic, strong, readonly) NSString *accessToken;
+@property (nonatomic, strong, readonly) NSString *refreshToken;
+@property (nonatomic, strong, readonly) NSDate *expiryDate;
+@property (nonatomic, strong, readonly) NSString *tokenType;
+@property (nonatomic, strong, readonly) NSString *scope;
 
 - (BOOL)isValid;
 

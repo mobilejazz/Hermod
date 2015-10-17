@@ -47,29 +47,29 @@
 @end
 
 /**
- * Mutable version of the MJApiSessionConfiguration class.
+ * The configurator object.
  **/
-@interface MJMutableApiSessionConfiguration : MJApiSessionConfiguration
+@interface MJApiSessionConfigurator : NSObject
 
 /**
  * The API client.
  **/
-@property (nonatomic, strong, readwrite) MJApiClient *apiClient;
+@property (nonatomic, strong) MJApiClient *apiClient;
 
 /**
  * The API path for OAuth requests. For example: "/api/v1/oauth/token".
  **/
-@property (nonatomic, copy, readwrite) NSString *apiOAuthPath;
+@property (nonatomic, copy) NSString *apiOAuthPath;
 
 /**
  * The client id to be used inside the OAuth.
  **/
-@property (nonatomic, copy, readwrite) NSString *clientId;
+@property (nonatomic, copy) NSString *clientId;
 
 /**
  * The client secret to be used inside the OAuth.
  **/
-@property (nonatomic, copy, readwrite) NSString *clientSecret;
+@property (nonatomic, copy) NSString *clientSecret;
 
 @end
 
@@ -96,10 +96,10 @@ typedef NS_ENUM(NSUInteger, MJApiSessionAccess)
 
 /**
  * Default initializer.
- * @param configurationBlock The configuration block.
+ * @param configuratorBlock The configurator block.
  * @return The initialized instance.
  **/
-- (id)initWithConfigurationBlock:(void (^)(MJMutableApiSessionConfiguration *configuration))configurationBlock;
+- (id)initWithConfigurator:(void (^)(MJApiSessionConfigurator *configurator))configuratorBlock;
 
 /** ************************************************************************************************ **
  * @name Attributes
