@@ -15,7 +15,6 @@
 //
 
 #import "MJApiSessionOAuth.h"
-#import <Motis/Motis.h>
 
 @implementation MJApiSessionOAuth
 
@@ -41,27 +40,19 @@
     [aCoder encodeObject:_scope forKey:@"scope"];
 }
 
-#pragma mark Motis Methods
-
-+ (NSDictionary *)mts_mapping {
-    return @{@"access_token": mts_key(accessToken),
-             @"refresh_token": mts_key(refreshToken),
-             @"expires_in": mts_key(expiryDate),
-             @"token_type": mts_key(tokenType),
-             @"scope": mts_key(scope),
-             };
-}
-
-- (void)setNilValueForKey:(NSString *)key {
-    // Avoid crash when receiving "null" for a non object property type
-}
-
-- (BOOL)validateExpiryDate:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
-    // Converting the expires_in value (numeric value in seconds) to a date of expiry.
-    if ([*ioValue isKindOfClass:NSNumber.class])
-        *ioValue = [NSDate dateWithTimeIntervalSinceNow:[*ioValue floatValue]];
-    
-    return [*ioValue isKindOfClass:NSDate.class];
+- (id)initWithDictionary:(NSDictionary*)dictionary
+{
+    self = [super init];
+    if (self)
+    {
+        _accessToken = dictionary[@"access_token"];
+        _refreshToken = dictionary[@"refresh_token"];
+        _expiryDate = [NSDate dateWithTimeIntervalSinceNow:[dictionary[@"expires_in"] floatValue]];
+        _tokenType = dictionary[@"token_type"];
+        _scope = dictionary[@"scope"];
+                                  
+    }
+    return self;
 }
 
 #pragma mark Public Methods

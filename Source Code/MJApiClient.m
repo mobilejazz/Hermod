@@ -66,6 +66,8 @@
         
         _host = configurator.host;
         _apiPath = configurator.apiPath;
+        _cacheManagement = configurator.cacheManagement;
+        
         _tasks = [NSMutableDictionary dictionary];
         
         _jsonRequestSerializer = [[AFJSONRequestSerializer alloc] init];
@@ -86,6 +88,7 @@
         {
             _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
         }
+        
         _httpSessionManager.requestSerializer = _jsonRequestSerializer;
         _httpSessionManager.responseSerializer = _jsonResponseSerializer;
     }
@@ -174,6 +177,12 @@
         
         if (completionBlock)
             completionBlock(response, task.taskIdentifier);
+        
+        if (response.error)
+        {
+            if ([_delegate respondsToSelector:@selector(apiClient:didReceiveErrorInResponse:)])
+                [_delegate apiClient:self didReceiveErrorInResponse:response];
+        }
     };
     
     if (httpMethod == HTTPMethodGET)
