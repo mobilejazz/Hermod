@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^MJApiResponseBlock)(MJApiResponse *response);
-
+@class MJApiResponse;
 @class MJApiRequest;
+
+typedef void (^MJApiResponseBlock)(MJApiResponse *response);
 
 /**
  * The main request executor interface.
