@@ -39,7 +39,7 @@
     //NOTE: I am using Mocky.io to create a fake request with the custom header
     //          Cache-Control : max-age=30
     
-    [_apiClient performRequest:request completionBlock:^(MJApiResponse *response, NSInteger key) {
+    [_apiClient performRequest:request completionBlock:^(MJApiResponse *response) {
         NSString *newString;
         if (response.error) {
             newString = [NSString stringWithFormat:@"Received error:\n%@\n", [response.error localizedDescription]];

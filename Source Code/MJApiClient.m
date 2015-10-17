@@ -116,12 +116,30 @@
     [_httpSessionManager.requestSerializer setValue:nil forHTTPHeaderField:@"Authorization"];
 }
 
-- (NSInteger)performRequest:(MJApiRequest*)request completionBlock:(MJApiResponseBlock)completionBlock
+#pragma mark Private Methods
+
+- (NSString*)mjz_urlPathForRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath
+{
+    if (request)
+    {
+        if (apiPath.length > 0)
+            return [_host stringByAppendingFormat:@"%@/%@", apiPath, request.path];
+        else
+            return [_host stringByAppendingFormat:@"%@", request.path];
+    }
+    
+    return nil;
+}
+
+#pragma mark - Protocols
+#pragma mark MJApiRequestExecutor 
+
+- (void)performRequest:(MJApiRequest*)request completionBlock:(MJApiResponseBlock)completionBlock
 {
     return [self performRequest:request apiPath:_apiPath completionBlock:completionBlock];
 }
 
-- (NSInteger)performRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath completionBlock:(MJApiResponseBlock)completionBlock
+- (void)performRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath completionBlock:(MJApiResponseBlock)completionBlock
 {
     NSURLSessionDataTask *sessionDataTask = nil;
     
@@ -130,7 +148,11 @@
     HTTPMethod httpMethod = request.httpMethod;
     
     if (!urlPath)
-        return NSNotFound;
+    {
+        if (completionBlock)
+            completionBlock(nil);
+        return;
+    }
     
     __block BOOL didFinish = NO;
     
@@ -149,7 +171,7 @@
         }
         
         if (completionBlock)
-            completionBlock(response, task.taskIdentifier);
+            completionBlock(response);
     };
     
     void (^taskFailCompletion)(NSURLSessionDataTask *, NSError *) = ^(NSURLSessionDataTask *task, NSError *error) {
@@ -176,7 +198,7 @@
         }
         
         if (completionBlock)
-            completionBlock(response, task.taskIdentifier);
+            completionBlock(response);
         
         if (response.error)
         {
@@ -236,68 +258,6 @@
     }
     
     request.finalURLRequest = sessionDataTask.originalRequest;
-    
-    if (sessionDataTask && !didFinish)
-    {
-        NSInteger identifier = sessionDataTask.taskIdentifier;
-        _tasks[@(identifier)] = sessionDataTask;
-        return identifier;
-    }
-    
-    return NSNotFound;
-}
-
-- (void)cancelRequestWithIdentifier:(NSInteger)identifier
-{
-    NSURLSessionDataTask *task = _tasks[@(identifier)];
-    [_tasks removeObjectForKey:@(identifier)];
-    [task cancel];
-}
-
-- (void)suspendRequestWithIdentifier:(NSInteger)identifier
-{
-    NSURLSessionDataTask *task = _tasks[@(identifier)];
-    [task suspend];
-}
-
-- (void)resumeRequestWithIdentifier:(NSInteger)identifier
-{
-    NSURLSessionDataTask *task = _tasks[@(identifier)];
-    [task resume];
-}
-
-- (void)cancelAllRequests
-{
-    NSArray *tasks = [_tasks allValues];
-    [tasks makeObjectsPerformSelector:@selector(cancel)];
-    [_tasks removeAllObjects];
-}
-
-- (void)suspendAllRequests
-{
-    NSArray *tasks = [_tasks allValues];
-    [tasks makeObjectsPerformSelector:@selector(suspend)];
-}
-
-- (void)resumeAllRequests
-{
-    NSArray *tasks = [_tasks allValues];
-    [tasks makeObjectsPerformSelector:@selector(resume)];
-}
-
-#pragma mark Private Methods
-
-- (NSString*)mjz_urlPathForRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath
-{
-    if (request)
-    {
-        if (apiPath.length > 0)
-            return [_host stringByAppendingFormat:@"%@/%@", apiPath, request.path];
-        else
-            return [_host stringByAppendingFormat:@"%@", request.path];
-    }
-    
-    return nil;
 }
 
 @end

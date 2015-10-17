@@ -183,7 +183,7 @@
                            };
     
     [self validateOAuth:^{
-        [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
+        [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response) {
             if (response.error == nil)
             {
                 MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
@@ -229,7 +229,7 @@
                            @"client_secret": _clientSecret,
                            };
     
-    [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
+    [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response) {
         if (response.error == nil)
         {
             MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
@@ -258,7 +258,7 @@
                            @"client_secret": _clientSecret,
                            };
     
-    [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response, NSInteger key) {
+    [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response) {
         if (response.error == nil)
         {
             MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
@@ -360,6 +360,23 @@
     
     MJApiClientKeychainManager *manager = [MJApiClientKeychainManager managerForService:service];
     return manager;
+}
+
+#pragma mark - Protocols
+#pragma mark MJApiRequestExecutor
+
+- (void)performRequest:(MJApiRequest *)request completionBlock:(MJApiResponseBlock)completionBlock
+{
+    [self validateOAuth:^{
+        [_apiClient performRequest:request completionBlock:completionBlock];
+    }];
+}
+
+- (void)performRequest:(MJApiRequest *)request apiPath:(NSString *)apiPath completionBlock:(MJApiResponseBlock)completionBlock
+{
+    [self validateOAuth:^{
+        [_apiClient performRequest:request completionBlock:completionBlock];
+    }];
 }
 
 @end
