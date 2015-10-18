@@ -12,21 +12,6 @@
  *  This session manager basically ovverride the GET method and add
  *  support for offline caching and server side cache
  */
-
 @interface MJHTTPOfflineCacheSessionManager : AFHTTPSessionManager
-
-/**
- *  Creates the default shared operation manager
- *
- *  @return the shared operation manager
- */
-+ (instancetype)sharedOperationManager;
-
-/**
- *  Creates an operation manager
- *
- *  @return an operation manager
- */
-- (instancetype)init;
 
 @end

@@ -29,14 +29,11 @@
 
 @interface MJApiClient ()
 
-@property (nonatomic, strong, readwrite) NSString *apiPath;
-
 @end
 
 @implementation MJApiClient
 {
     AFHTTPSessionManager *_httpSessionManager;
-    NSMutableDictionary *_tasks;
     
     AFJSONRequestSerializer *_jsonRequestSerializer;
     MJJSONResponseSerializer *_jsonResponseSerializer;
@@ -68,18 +65,7 @@
         _apiPath = configurator.apiPath;
         _cacheManagement = configurator.cacheManagement;
         
-        _tasks = [NSMutableDictionary dictionary];
-        
-        _jsonRequestSerializer = [[AFJSONRequestSerializer alloc] init];
-        _jsonResponseSerializer = [[MJJSONResponseSerializer alloc] init];
-        
-        // Allowing fragments on json responses.
-        _jsonResponseSerializer.readingOptions = NSJSONReadingAllowFragments;
-        
-        // Setting the backend return language
-        NSString *language = [[NSLocale preferredLanguages] firstObject];
-        [_jsonRequestSerializer setValue:language forHTTPHeaderField:@"Accept-Language"];
-        
+        // Configuring the cache management
         if (configurator.cacheManagement == MJApiClientCacheManagementOffline)
         {
             _httpSessionManager = [[MJHTTPOfflineCacheSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
@@ -89,26 +75,53 @@
             _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
         }
         
+        // Creating serializers
+        _jsonRequestSerializer = [[AFJSONRequestSerializer alloc] init];
+        _jsonResponseSerializer = [[MJJSONResponseSerializer alloc] init];
+        
+        // Allowing fragments on JSON responses.
+        _jsonResponseSerializer.readingOptions = NSJSONReadingAllowFragments;
+        
+        // Setting the request language
+        NSString *language = [[NSLocale preferredLanguages] firstObject];
+        [_jsonRequestSerializer setValue:language forHTTPHeaderField:@"Accept-Language"];
+        
+        // Configuring serializers
         _httpSessionManager.requestSerializer = _jsonRequestSerializer;
         _httpSessionManager.responseSerializer = _jsonResponseSerializer;
     }
     return self;
 }
 
-
 #pragma mark Public Methods
 
 - (void)setBearerToken:(NSString*)token
 {
     if (token)
+    {
         [_httpSessionManager.requestSerializer setValue:[@"Bearer " stringByAppendingString:token] forHTTPHeaderField:@"Authorization"];
+    }
     else
+    {
         [self removeAuthorizationHeaders];
+    }
 }
 
 - (void)setBasicAuthWithUsername:(NSString*)username password:(NSString*)password
 {
-    [_httpSessionManager.requestSerializer setAuthorizationHeaderFieldWithUsername:username password:password];
+    if (username != nil && password != nil)
+    {
+        [_httpSessionManager.requestSerializer setAuthorizationHeaderFieldWithUsername:username password:password];
+    }
+    else if (username == nil && password == nil)
+    {
+        [self removeAuthorizationHeaders];
+    }
+    else
+    {
+        NSString *reason = @"Username or password are nil. Cannot set the Authorization headers. Fix by passing no nil values or both values as nil (to remove current authorization headers).";
+        [[NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil] raise];
+    }
 }
 
 - (void)removeAuthorizationHeaders
@@ -127,7 +140,6 @@
         else
             return [_host stringByAppendingFormat:@"%@", request.path];
     }
-    
     return nil;
 }
 
@@ -159,7 +171,6 @@
     void (^taskCompletion)(NSURLSessionDataTask *, id) = ^(NSURLSessionDataTask *task, id responseObject)
     {
         didFinish = YES;
-        [_tasks removeObjectForKey:@(task.taskIdentifier)];
         
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)task.response;
         
@@ -177,7 +188,6 @@
     void (^taskFailCompletion)(NSURLSessionDataTask *, NSError *) = ^(NSURLSessionDataTask *task, NSError *error) {
         
         didFinish = YES;
-        [_tasks removeObjectForKey:@(task.taskIdentifier)];
         
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)task.response;
         
@@ -208,7 +218,12 @@
     };
     
     if (httpMethod == HTTPMethodGET)
-        sessionDataTask = [_httpSessionManager GET:urlPath parameters:parameters success:taskCompletion failure:taskFailCompletion];
+    {
+        sessionDataTask = [_httpSessionManager GET:urlPath
+                                        parameters:parameters
+                                           success:taskCompletion
+                                           failure:taskFailCompletion];
+    }
     else if (httpMethod == HTTPMethodPOST)
     {
         if ([request isKindOfClass:MJApiUploadRequest.class])
@@ -228,28 +243,56 @@
                                                                                        }
                                                                                                            error:nil];
             
-            sessionDataTask = [_httpSessionManager uploadTaskWithStreamedRequest:request progress:nil completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
-                if (error)
-                    taskFailCompletion(sessionDataTask, error);
-                else
-                    taskCompletion(sessionDataTask, responseObject);
-            }];
-            
+            sessionDataTask = [_httpSessionManager uploadTaskWithStreamedRequest:request
+                                                                        progress:nil
+                                                               completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
+                                                                   if (error)
+                                                                       taskFailCompletion(sessionDataTask, error);
+                                                                   else
+                                                                       taskCompletion(sessionDataTask, responseObject);
+                                                               }];
             [sessionDataTask resume];
         }
         else
         {
-            sessionDataTask = [_httpSessionManager POST:urlPath parameters:parameters success:taskCompletion failure:taskFailCompletion];
+            sessionDataTask = [_httpSessionManager POST:urlPath
+                                             parameters:parameters
+                                                success:taskCompletion
+                                                failure:taskFailCompletion];
         }
     }
     else if (httpMethod == HTTPMethodPUT)
-        sessionDataTask = [_httpSessionManager PUT:urlPath parameters:parameters success:taskCompletion failure:taskFailCompletion];
+    {
+        sessionDataTask = [_httpSessionManager PUT:urlPath
+                                        parameters:parameters
+                                           success:taskCompletion
+                                           failure:taskFailCompletion];
+    }
     else if (httpMethod == HTTPMethodDELETE)
-        sessionDataTask = [_httpSessionManager DELETE:urlPath parameters:parameters success:taskCompletion failure:taskFailCompletion];
+    {
+        sessionDataTask = [_httpSessionManager DELETE:urlPath
+                                           parameters:parameters
+                                              success:taskCompletion
+                                              failure:taskFailCompletion];
+    }
     else if (httpMethod == HTTPMethodHEAD)
-        sessionDataTask = [_httpSessionManager HEAD:urlPath parameters:parameters success:^(NSURLSessionDataTask *task) { taskCompletion(task, nil); } failure:taskFailCompletion];
+    {
+        sessionDataTask = [_httpSessionManager HEAD:urlPath
+                                         parameters:parameters
+                                            success:^(NSURLSessionDataTask *task) {
+                                                taskCompletion(task, nil);
+                                            }
+                                            failure:taskFailCompletion];
+    }
     else if (httpMethod == HTTPMethodPATCH)
-        sessionDataTask = [_httpSessionManager PATCH:urlPath parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) { taskCompletion(task, nil); } failure:taskFailCompletion];
+    {
+        sessionDataTask = [_httpSessionManager PATCH:urlPath
+                                          parameters:parameters
+                                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                                 taskCompletion(task, nil);
+                                             }
+                                             failure:taskFailCompletion];
+    }
 
     if ((_logLevel & MJApiClientLogLevelRequests) != 0)
     {
