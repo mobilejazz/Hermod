@@ -18,7 +18,7 @@
 
 @implementation NSString (MJApiClientMD5Hashing)
 
-- (NSString*)md5_stringWithMD5Hash;
+- (NSString*)mjz_api_md5_stringWithMD5Hash;
 {
     const char *cStr = [self UTF8String];
     unsigned char result[16];

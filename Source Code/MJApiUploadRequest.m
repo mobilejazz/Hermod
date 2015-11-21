@@ -38,7 +38,7 @@
 - (NSUInteger)hash
 {
     NSString *identifier = [NSString stringWithFormat:@"%@:%@:%lu:%@",_fieldName, _filename, (unsigned long)_data.hash, _mimeType];
-    return [[identifier md5_stringWithMD5Hash] hash];
+    return [[identifier mjz_api_md5_stringWithMD5Hash] hash];
 }
 
 - (BOOL)isEqual:(id)object
@@ -102,7 +102,7 @@
         [string appendFormat:@":%@:%@:%@:%lu",task.fieldName, task.filename, task.mimeType, (unsigned long)task.data.hash];
     }];
     
-    return [string md5_stringWithMD5Hash];
+    return [string mjz_api_md5_stringWithMD5Hash];
 }
 
 @end

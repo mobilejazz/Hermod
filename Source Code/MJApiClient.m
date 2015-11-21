@@ -64,6 +64,7 @@
         _host = configurator.host;
         _apiPath = configurator.apiPath;
         _cacheManagement = configurator.cacheManagement;
+        _completionBlockQueue = configurator.completionBlockQueue;
         
         // Configuring the cache management
         if (configurator.cacheManagement == MJApiClientCacheManagementOffline)
@@ -119,7 +120,7 @@
     }
     else
     {
-        NSString *reason = @"Username or password are nil. Cannot set the Authorization headers. Fix by passing no nil values or both values as nil (to remove current authorization headers).";
+        NSString *reason = @"Username or password are nil. Cannot set the Authorization headers. Fix by passing no nil values or both values as nil (to remove current authorization headers).";
         [[NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil] raise];
     }
 }
@@ -166,6 +167,14 @@
         return;
     }
     
+    dispatch_queue_t completionBlockQueue = request.completionBlockQueue;
+    if (!completionBlockQueue)
+    {
+        completionBlockQueue = self.completionBlockQueue;
+        if (!completionBlockQueue)
+            completionBlockQueue = dispatch_get_main_queue();
+    }
+    
     __block BOOL didFinish = NO;
     
     void (^taskCompletion)(NSURLSessionDataTask *, id) = ^(NSURLSessionDataTask *task, id responseObject)
@@ -174,15 +183,41 @@
         
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)task.response;
         
-        MJApiResponse *response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse responseObject:responseObject];
+        NSError *error = nil;
+        if ([_delegate respondsToSelector:@selector(apiClient:errorForResponseBody:httpResponse:incomingError:)])
+            error = [_delegate apiClient:self errorForResponseBody:responseObject httpResponse:httpResponse incomingError:nil];
         
-        if ((_logLevel & MJApiClientLogLevelResponses) != 0)
+        MJApiResponse *response = nil;
+        
+        if (error)
         {
-            NSLog(@"[ApiClient] RESPONSE: SUCCESS\n%@\n\n", response.description);
+            response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse error:error];
+            response.responseObject = responseObject;
+            
+            if ((_logLevel & MJApiClientLogLevelResponses) != 0)
+                NSLog(@"[ApiClient] RESPONSE: FAILURE\n%@\n\n", response.description);
+        }
+        else
+        {
+            response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse responseObject:responseObject];
+            
+            if ((_logLevel & MJApiClientLogLevelResponses) != 0)
+                NSLog(@"[ApiClient] RESPONSE: SUCCESS\n%@\n\n", response.description);
         }
         
-        if (completionBlock)
-            completionBlock(response);
+        dispatch_async(completionBlockQueue, ^{
+            if (completionBlock)
+                completionBlock(response);
+            
+            if (response.error)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    if ([_delegate respondsToSelector:@selector(apiClient:didReceiveErrorInResponse:)])
+                        [_delegate apiClient:self didReceiveErrorInResponse:response];
+                });
+            }
+        });
     };
     
     void (^taskFailCompletion)(NSURLSessionDataTask *, NSError *) = ^(NSURLSessionDataTask *task, NSError *error) {
@@ -192,29 +227,43 @@
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)task.response;
         
         NSDictionary *body = error.userInfo[MJJSONResponseSerializerBodyKey];
-        
         if (body)
         {
-            if ([_delegate respondsToSelector:@selector(apiClient:errorForResponseBody:incomingError:)])
-                error = [_delegate apiClient:self errorForResponseBody:body incomingError:error];
+            if ([_delegate respondsToSelector:@selector(apiClient:errorForResponseBody:httpResponse:incomingError:)])
+                error = [_delegate apiClient:self errorForResponseBody:body httpResponse:httpResponse incomingError:error];
         }
         
-        MJApiResponse *response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse error:error];
-        response.responseObject = body;
+        MJApiResponse *response = nil;
         
-        if ((_logLevel & MJApiClientLogLevelResponses) != 0)
+        if (error)
         {
-            NSLog(@"[ApiClient] RESPONSE: FAILURE\n%@\n\n", response.description);
+            response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse error:error];
+            response.responseObject = body;
+            
+            if ((_logLevel & MJApiClientLogLevelResponses) != 0)
+                NSLog(@"[ApiClient] RESPONSE: FAILURE\n%@\n\n", response.description);
         }
-        
-        if (completionBlock)
-            completionBlock(response);
-        
-        if (response.error)
+        else
         {
-            if ([_delegate respondsToSelector:@selector(apiClient:didReceiveErrorInResponse:)])
-                [_delegate apiClient:self didReceiveErrorInResponse:response];
+            response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse responseObject:body];
+            
+            if ((_logLevel & MJApiClientLogLevelResponses) != 0)
+                NSLog(@"[ApiClient] RESPONSE: SUCCESS\n%@\n\n", response.description);
         }
+        
+        dispatch_async(completionBlockQueue, ^{
+            if (completionBlock)
+                completionBlock(response);
+            
+            if (response.error)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    if ([_delegate respondsToSelector:@selector(apiClient:didReceiveErrorInResponse:)])
+                        [_delegate apiClient:self didReceiveErrorInResponse:response];
+                });
+            }
+        });
     };
     
     if (httpMethod == HTTPMethodGET)
@@ -300,6 +349,7 @@
         NSLog(@"[ApiClient] REQUEST:\n%@\n%@\n\n", request.description, curl);
     }
     
+
     request.finalURLRequest = sessionDataTask.originalRequest;
 }
 

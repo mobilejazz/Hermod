@@ -78,6 +78,12 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
  **/
 @property (nonatomic, assign, readwrite) MJApiClientCacheManagement cacheManagement;
 
+/**
+ * Requests completion block will be executed on the given queue.
+ * @discussion If nil, blocks will be executed on the main queue.
+ **/
+@property (nonatomic, strong, readwrite) dispatch_queue_t completionBlockQueue;
+
 @end
 
 /* ************************************************************************************************** */
@@ -101,7 +107,6 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
  * @return An initialized instance.
  **/
 - (id)initWithHost:(NSString*)host apiPath:(NSString *)apiPath;
-
 
 /**
  *  Designated initializer.
@@ -129,6 +134,12 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
  * The cache managemenet strategy.
  **/
 @property (nonatomic, assign, readonly) MJApiClientCacheManagement cacheManagement;
+
+/**
+ * Requests completion block will be executed on the given queue.
+ * @discussion If nil, blocks will be executed on the main queue.
+ **/
+@property (nonatomic, strong, readonly) dispatch_queue_t completionBlockQueue;
 
 /** ************************************************* **
  * @name Authorization Headers
@@ -166,7 +177,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
  ** ************************************************* **/
 
 /**
- * The log level of the api client. Default value is `MJApiClientLogLevelNone`.
+ * The log level of the api client. Default value is `MJApiClientLogLevelNone`.
  **/
 @property (nonatomic, assign) MJApiClientLogLevel logLevel;
 
@@ -186,13 +197,14 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
 
 @optional
 /**
- * By implementing this method, the delegate thas the oportunity to create custom errors depending on the incoming resposne body or the incoming error.
+ * By implementing this method, the delegate thas the oportunity to create custom errors depending on the incoming response body or the incoming error.
  * @param apiClient The API client.
- * @param responseBody The resposne body (can be nil).
+ * @param responseBody The response body (can be nil).
+ * @param httpResponse The HTTP URL Response.
  * @param error The incoming error (can be nil).
- * @discussion This method is called for every succed and failed api response. Either the response body is not nil, the error is not nil or bot hare not nil.
+ * @discussion This method is called for every succeed and failed API response. Either the response body is not nil, the error is not nil or both are not nil.
  **/
-- (NSError*)apiClient:(MJApiClient*)apiClient errorForResponseBody:(NSDictionary*)responseBody incomingError:(NSError*)error;
+- (NSError*)apiClient:(MJApiClient*)apiClient errorForResponseBody:(id)responseBody httpResponse:(NSHTTPURLResponse*)httpResponse incomingError:(NSError*)error;
 
 /**
  * Notifies the delegate that an api response has got an error.
@@ -202,6 +214,3 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
 - (void)apiClient:(MJApiClient*)apiClient didReceiveErrorInResponse:(MJApiResponse*)response;
 
 @end
-
-
-
