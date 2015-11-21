@@ -9,32 +9,39 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import "MJApiClient.h"
+#import "MJApiSession.h"
+
 @interface ApiClientTests : XCTestCase
 
 @end
 
 @implementation ApiClientTests
-
-- (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+{
+    
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+- (void)setUp
+{
+    [super setUp];
+}
+
+- (void)tearDown
+{
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
+- (void)testExample
+{
     XCTAssert(YES, @"Pass");
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
+//- (void)testPerformanceExample
+//{
+//    // This is an example of a performance test case.
+//    [self measureBlock:^{
+//        // Put the code you want to measure the time of here.
+//    }];
+//}
 
 @end

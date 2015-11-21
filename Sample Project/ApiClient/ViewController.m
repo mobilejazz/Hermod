@@ -9,6 +9,14 @@
 #import "ViewController.h"
 #import "MJApiClient.h"
 
+#define DoInForeground(block) \
+if ([NSThread isMainThread]) \
+block();\
+else \
+dispatch_async(dispatch_get_main_queue(), ^{\
+block();\
+});
+
 @interface ViewController ()
 
 @property (nonatomic, strong, readwrite) MJApiClient *apiClient;
@@ -27,13 +35,14 @@
         configurator.apiPath = @"/v2";
         configurator.host = @"http://www.mocky.io";//Testing using Mocki services
         configurator.cacheManagement = MJApiClientCacheManagementOffline;
+        configurator.completionBlockQueue = dispatch_queue_create("com.mobilejazz.background-queue", DISPATCH_QUEUE_SERIAL);
     }];
     
     self.apiClient.logLevel = MJApiClientLogLevelRequests;
 }
 
-- (IBAction)getFakeRequest:(id)sender {
-    
+- (IBAction)getFakeRequest:(id)sender
+{    
     MJApiRequest *request = [MJApiRequest requestWithPath:@"562158b5120000714c0113ff"];
     
     //NOTE: I am using Mocky.io to create a fake request with the custom header
@@ -47,7 +56,10 @@
         else {
             newString = [NSString stringWithFormat:@"Received response:\n%@\n", response.responseObject];
         }
-        _responseTextView.text = [_responseTextView.text stringByAppendingString:newString];
+
+        DoInForeground(^{
+            _responseTextView.text = [_responseTextView.text stringByAppendingString:newString];
+        });
     }];
 }
 

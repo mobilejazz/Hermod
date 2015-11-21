@@ -10,28 +10,6 @@
 
 @implementation MJHTTPOfflineCacheSessionManager
 
-+ (instancetype)sharedOperationManager
-{
-    static MJHTTPOfflineCacheSessionManager *_sharedOperationManager = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedOperationManager = (MJHTTPOfflineCacheSessionManager *) [[[self class] alloc] init];
-    });
-    
-    return _sharedOperationManager;
-}
-
-- (instancetype)init
-{
-    self = [super init];
-    
-    if (self)
-    {
-        [[AFNetworkReachabilityManager sharedManager] startMonitoring];
-    }
-    return self;
-}
-
 - (instancetype)initWithBaseURL:(NSURL *)url
 {
     self = [super initWithBaseURL:url];
@@ -42,7 +20,8 @@
     return self;
 }
 
-- (instancetype)initWithBaseURL:(NSURL *)url sessionConfiguration:(NSURLSessionConfiguration *)configuration {
+- (instancetype)initWithBaseURL:(NSURL *)url sessionConfiguration:(NSURLSessionConfiguration *)configuration
+{
     self = [super initWithBaseURL:url sessionConfiguration:configuration];
     if (self)
     {
@@ -54,7 +33,6 @@
 - (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)configuration
 {
     self = [super initWithSessionConfiguration:configuration];
-    
     if (self)
     {
         [[AFNetworkReachabilityManager sharedManager] startMonitoring];
@@ -71,7 +49,8 @@
 
     //NOTE: you need to setup the reachability manager to make the offline beahaviour to work
     //If the network is unreachable, by default pick up from the cache, no matter expiration date
-    switch (self.reachabilityManager.networkReachabilityStatus) {
+    switch (self.reachabilityManager.networkReachabilityStatus)
+    {
         case AFNetworkReachabilityStatusNotReachable:
             [copyRequest setCachePolicy:NSURLRequestReturnCacheDataElseLoad];
             break;

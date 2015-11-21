@@ -59,7 +59,7 @@
         _clientSecret = configurator.clientSecret;
         
         NSString *string = [NSString stringWithFormat:@"host:%@::clientId:%@", _apiClient.host, _clientId];
-        _identifier = [string md5_stringWithMD5Hash];
+        _identifier = [string mjz_api_md5_stringWithMD5Hash];
 
         [self mjz_load];
     }

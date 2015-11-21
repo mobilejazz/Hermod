@@ -47,7 +47,7 @@
 - (id)initWithRequest:(MJApiRequest*)request httpResponse:(NSHTTPURLResponse*)response responseObject:(id)responseObject;
 
 /** ************************************************* **
- * @name Attributes
+ * @name Attributes
  ** ************************************************* **/
 
 /**

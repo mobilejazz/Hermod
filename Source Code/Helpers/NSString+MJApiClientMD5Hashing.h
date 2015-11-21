@@ -25,6 +25,6 @@
  * Generates the MD5 hash from the current string.
  * @return The MD5 hash string.
  **/
-- (NSString*)md5_stringWithMD5Hash;
+- (NSString*)mjz_api_md5_stringWithMD5Hash;
 
 @end

@@ -124,7 +124,7 @@
                 [parametersStr appendFormat:@"%@:%@;", key, value];
             }
             [parametersStr appendString:@"]"];
-            return [parametersStr md5_stringWithMD5Hash];
+            return [parametersStr mjz_api_md5_stringWithMD5Hash];
         };
     });
     
@@ -134,7 +134,7 @@
     else
         string = [NSString stringWithFormat:@"%@/%lu/%@", _path, (unsigned long)_httpMethod, _parameters];
 
-    return [string md5_stringWithMD5Hash];
+    return [string mjz_api_md5_stringWithMD5Hash];
 }
 
 @end

@@ -64,6 +64,16 @@
 - (NSString*)identifier;
 
 /** ************************************************* **
+ * @name Threading
+ ** ************************************************* **/
+
+/**
+ * The completion block will be executed in the given queue. 
+ * @discussion If nil, the default `MJApiClient` `completionBlockQueue` will be used.
+ **/
+@property (nonatomic, strong) dispatch_queue_t completionBlockQueue;
+
+/** ************************************************* **
  * @name Debugging
  ** ************************************************* **/
 
