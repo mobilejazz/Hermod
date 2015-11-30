@@ -17,40 +17,17 @@
 #import <Foundation/Foundation.h>
 
 #import "MJApiClient.h"
-#import "MJApiSessionOAuth.h"
+#import "MJApiOAuth.h"
 #import "MJApiRequestExecutor.h"
-
-/**
- * This class collects all the information related to configuring an API client together wit the API session management.
- **/
-@interface MJApiSessionConfiguration : NSObject
-
-/**
- * The API client.
- **/
-- (MJApiClient*)apiClient;
-
-/**
- * The API path for OAuth requests.
- **/
-- (NSString*)apiOAuthPath;
-
-/**
- * The client id to be used inside the OAuth.
- **/
-- (NSString*)clientId;
-
-/**
- * The client secret to be used inside the OAuth.
- **/
-- (NSString*)clientSecret;
-
-@end
 
 /**
  * The configurator object.
  **/
-@interface MJApiSessionConfigurator : NSObject
+@interface MJApiOAuthSesionConfigurator : NSObject
+
+/** ************************************************************************************************ **
+ * @name Main Attributes
+ ** ************************************************************************************************ **/
 
 /**
  * The API client.
@@ -72,24 +49,43 @@
  **/
 @property (nonatomic, copy) NSString *clientSecret;
 
+/**
+ * YES to use AppToken and UserToken. NO to use only UserToken. Default value is YES.
+ **/
+@property (nonatomic, assign) BOOL useAppToken;
+
+/** ************************************************************************************************ **
+ * @name Token Validation
+ ** ************************************************************************************************ **/
+
+/**
+ * A time interval offset used when checking if the token is expired: "expiryDate - now < validTokenOffsetTimeInterval". Default value is 60 seconds.
+ **/
+@property (nonatomic, assign) NSTimeInterval validTokenOffsetTimeInterval;
+
+/**
+ * The oauth object configuration.
+ **/
+@property (nonatomic, strong) MJApiOAuthConfiguration *oauthConfiguration;
+
 @end
 
-typedef NS_ENUM(NSUInteger, MJApiSessionAccess)
+typedef NS_ENUM(NSUInteger, MJApiOAuthSesionAccess)
 {
     /** The session has no token access. */
-    MJApiSessionAccessNone,
+    MJApiOAuthSesionAccessNone,
     
     /** The session has only app token access. */
-    MJApiSessionAccessApp,
+    MJApiOAuthSesionAccessApp,
     
     /** The session has a user token access. */
-    MJApiSessionAccessUser,
+    MJApiOAuthSesionAccessUser,
 };
 
 /**
- * This class manages the OAuth session of an API client (MJApiClient).
+ * Request executor class using OAuth (user + app tokens).
  **/
-@interface MJApiSession : NSObject <MJApiRequestExecutor>
+@interface MJApiOAuthSession : NSObject <MJApiRequestExecutor>
 
 /** ************************************************************************************************ **
  * @name Initializers
@@ -100,7 +96,7 @@ typedef NS_ENUM(NSUInteger, MJApiSessionAccess)
  * @param configuratorBlock The configurator block.
  * @return The initialized instance.
  **/
-- (id)initWithConfigurator:(void (^)(MJApiSessionConfigurator *configurator))configuratorBlock;
+- (id)initWithConfigurator:(void (^)(MJApiOAuthSesionConfigurator *configurator))configuratorBlock;
 
 /** ************************************************************************************************ **
  * @name Attributes
@@ -109,17 +105,17 @@ typedef NS_ENUM(NSUInteger, MJApiSessionAccess)
 /**
  * The current session access being used.
  **/
-@property (nonatomic, assign, readonly) MJApiSessionAccess sessionAccess;
+@property (nonatomic, assign, readonly) MJApiOAuthSesionAccess sessionAccess;
 
 /**
  * The oauth object representing app access credentials.
  **/
-@property (nonatomic, strong, readonly) MJApiSessionOAuth *oauthForAppAccess;
+@property (nonatomic, strong, readonly) MJApiOAuth *oauthForAppAccess;
 
 /**
  * The oauth object representing user access credentials.
  **/
-@property (nonatomic, strong, readonly) MJApiSessionOAuth *oauthForUserAccess;
+@property (nonatomic, strong, readonly) MJApiOAuth *oauthForUserAccess;
 
 /**
  * The managed API client.

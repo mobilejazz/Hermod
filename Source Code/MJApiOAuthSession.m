@@ -14,16 +14,18 @@
 // limitations under the License.
 //
 
-#import "MJApiSession.h"
+#import "MJApiOAuthSession.h"
 
 #import "MJApiClientKeychainManager.h"
 #import "NSString+MJApiClientMD5Hashing.h"
 
-@implementation MJApiSessionConfigurator
+@implementation MJApiOAuthSesionConfigurator
 
 @end
 
-@implementation MJApiSession
+#pragma mark -
+
+@implementation MJApiOAuthSession
 {
     NSOperationQueue *_requestOperationQueue;
     
@@ -31,32 +33,46 @@
     NSString *_apiOAuthPath;
     NSString *_clientId;
     NSString *_clientSecret;
+    BOOL _useAppToken;
+    
+    NSTimeInterval _validTokenOffsetTimeInterval;
+    
+    MJApiOAuthConfiguration *_oauthConfiguration;
     
     NSString *_identifier;
 }
 
 - (id)init
 {
-    return [self initWithConfigurator:nil];
+    return [self initWithConfigurator:^(MJApiOAuthSesionConfigurator *configurator) {
+        // Nothing to do
+    }];
 }
 
-- (id)initWithConfigurator:(void (^)(MJApiSessionConfigurator *configurator))configuratorBlock;
+- (id)initWithConfigurator:(void (^)(MJApiOAuthSesionConfigurator *configurator))configuratorBlock;
 {
     self = [super init];
     if (self)
     {
-        MJApiSessionConfigurator *configurator = [[MJApiSessionConfigurator alloc] init];
-        if (configuratorBlock)
-            configuratorBlock(configurator);
-        
         // One request at a time.
         _requestOperationQueue = [[NSOperationQueue alloc] init];
         _requestOperationQueue.maxConcurrentOperationCount = 1;
+        
+        MJApiOAuthSesionConfigurator *configurator = [[MJApiOAuthSesionConfigurator alloc] init];
+        configurator.validTokenOffsetTimeInterval = 60;
+        configurator.useAppToken = YES;
+        configurator.oauthConfiguration = [[MJApiOAuthConfiguration alloc] init];
+        
+        if (configuratorBlock)
+            configuratorBlock(configurator);
         
         _apiClient = configurator.apiClient;
         _apiOAuthPath = configurator.apiOAuthPath;
         _clientId = configurator.clientId;
         _clientSecret = configurator.clientSecret;
+        _oauthConfiguration = configurator.oauthConfiguration;
+        _validTokenOffsetTimeInterval = configurator.validTokenOffsetTimeInterval;
+        _useAppToken = configurator.useAppToken;
         
         NSString *string = [NSString stringWithFormat:@"host:%@::clientId:%@", _apiClient.host, _clientId];
         _identifier = [string mjz_api_md5_stringWithMD5Hash];
@@ -68,14 +84,14 @@
 
 #pragma mark Properties
 
-- (void)setOauthForAppAccess:(MJApiSessionOAuth *)oauthForAppAccess
+- (void)setOauthForAppAccess:(MJApiOAuth *)oauthForAppAccess
 {
     _oauthForAppAccess = oauthForAppAccess;
     [self mjz_refreshApiClientAuthorization];
     [self mjz_save];
 }
 
-- (void)setOauthForUserAccess:(MJApiSessionOAuth *)oauthForUserAccess
+- (void)setOauthForUserAccess:(MJApiOAuth *)oauthForUserAccess
 {
     _oauthForUserAccess = oauthForUserAccess;
     [self mjz_refreshApiClientAuthorization];
@@ -113,40 +129,33 @@
         if (_oauthForUserAccess != nil)
         {
             // Checking validity of the user oauth token.
-            if (_oauthForUserAccess.isValid)
+            if ([_oauthForUserAccess isValidWithOffset:_validTokenOffsetTimeInterval])
             {
                 endOperation(YES);
             }
             else
             {
-                [self mjz_refreshToken:_oauthForUserAccess.refreshToken completionBlock:^(MJApiSessionOAuth *oauth, NSError *error) {
-                    if (!error)
-                        self.oauthForUserAccess = oauth;
-                    else
-                        self.oauthForUserAccess = nil;
-                    
-                    endOperation(error == nil);
+                // Validating app token
+                [self mjz_appTokenBlock:^(BOOL succeed) {
+                                        
+                    // Refreshing user token
+                    [self mjz_refreshToken:_oauthForUserAccess.refreshToken completionBlock:^(MJApiOAuth *oauth, NSError *error) {
+                        if (!error)
+                            self.oauthForUserAccess = oauth;
+                        else
+                            self.oauthForUserAccess = nil;
+                        
+                        endOperation(error == nil);
+                    }];
                 }];
             }
         }
-        else
+        else 
         {
             // Checking validity of the app oauth token.
-            if (_oauthForAppAccess.isValid)
-            {
-                endOperation(YES);
-            }
-            else
-            {
-                [self mjz_clientCredentialsWithCompletionBlock:^(MJApiSessionOAuth *oauth, NSError *error) {
-                    if (!error)
-                        self.oauthForAppAccess = oauth;
-                    else
-                        self.oauthForAppAccess = nil;
-                    
-                    endOperation(error == nil);
-                }];
-            }
+            [self mjz_appTokenBlock:^(BOOL succeed) {
+                endOperation(succeed);
+            }];
         }
         
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -186,7 +195,7 @@
         [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response) {
             if (response.error == nil)
             {
-                MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
+                MJApiOAuth *oauth = [[MJApiOAuth alloc] initWithJSON:response.responseObject configuration:_oauthConfiguration];
                 self.oauthForUserAccess = oauth;
                 
                 if (completionBlock)
@@ -203,6 +212,35 @@
 
 #pragma mark Private Mehtods
 
+- (void)mjz_appTokenBlock:(void (^)(BOOL succeed))block
+{
+    if (_useAppToken == NO)
+    {
+        if (block)
+            block(YES);
+        return;
+    }
+    
+    // Checking validity of the app oauth token.
+    if ([_oauthForAppAccess isValidWithOffset:_validTokenOffsetTimeInterval])
+    {
+        if (block)
+            block(YES);
+    }
+    else
+    {
+        [self mjz_clientCredentialsWithCompletionBlock:^(MJApiOAuth *oauth, NSError *error) {
+            if (!error)
+                self.oauthForAppAccess = oauth;
+            else
+                self.oauthForAppAccess = nil;
+            
+            if (block)
+                block(error == nil);
+        }];
+    }
+}
+
 - (NSString*)mjz_keychainOAuthAppKey
 {
     NSString *key = [NSString stringWithFormat:@"%@.oauth.app", _identifier];
@@ -215,7 +253,7 @@
     return key;
 }
 
-- (void)mjz_refreshToken:(NSString*)refreshToken completionBlock:(void (^)(MJApiSessionOAuth *oauth, NSError *error))completionBlock
+- (void)mjz_refreshToken:(NSString*)refreshToken completionBlock:(void (^)(MJApiOAuth *oauth, NSError *error))completionBlock
 {
     NSAssert(_apiOAuthPath != nil, @"API OAuth path is not set.");
     NSAssert(_clientId != nil, @"client id is not set.");
@@ -232,7 +270,7 @@
     [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response) {
         if (response.error == nil)
         {
-            MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
+            MJApiOAuth *oauth = [[MJApiOAuth alloc] initWithJSON:response.responseObject configuration:_oauthConfiguration];
             
             if (completionBlock)
                 completionBlock(oauth, nil);
@@ -245,7 +283,7 @@
     }];
 }
 
-- (void)mjz_clientCredentialsWithCompletionBlock:(void (^)(MJApiSessionOAuth *oauth, NSError *error))completionBlock
+- (void)mjz_clientCredentialsWithCompletionBlock:(void (^)(MJApiOAuth *oauth, NSError *error))completionBlock
 {
     NSAssert(_apiOAuthPath != nil, @"API OAuth path is not set.");
     NSAssert(_clientId != nil, @"client id is not set.");
@@ -261,7 +299,7 @@
     [_apiClient performRequest:request apiPath:nil completionBlock:^(MJApiResponse *response) {
         if (response.error == nil)
         {
-            MJApiSessionOAuth *oauth = [[MJApiSessionOAuth alloc] initWithDictionary:response.responseObject];
+            MJApiOAuth *oauth = [[MJApiOAuth alloc] initWithJSON:response.responseObject configuration:_oauthConfiguration];
             
             if (completionBlock)
                 completionBlock(oauth, nil);
@@ -281,7 +319,7 @@
     
     if (appData)
     {
-        MJApiSessionOAuth *appOauth = [NSKeyedUnarchiver unarchiveObjectWithData:appData];
+        MJApiOAuth *appOauth = [NSKeyedUnarchiver unarchiveObjectWithData:appData];
         if (appOauth.accessToken && appOauth.refreshToken)
         {
             _oauthForAppAccess = appOauth;
@@ -289,7 +327,7 @@
     }
     
     if (userData) {
-        MJApiSessionOAuth *userOauth = [NSKeyedUnarchiver unarchiveObjectWithData:userData];
+        MJApiOAuth *userOauth = [NSKeyedUnarchiver unarchiveObjectWithData:userData];
         if (userOauth.accessToken && userOauth.refreshToken)
         {
             _oauthForUserAccess = userOauth;
@@ -324,18 +362,18 @@
 
 - (void)mjz_refreshApiClientAuthorization
 {
-    MJApiSessionAccess access = MJApiSessionAccessNone;
-    MJApiSessionOAuth *oauth = nil;
+    MJApiOAuthSesionAccess access = MJApiOAuthSesionAccessNone;
+    MJApiOAuth *oauth = nil;
     
-    if (_oauthForUserAccess.isValid)
+    if ([_oauthForUserAccess isValidWithOffset:_validTokenOffsetTimeInterval])
     {
         oauth = _oauthForUserAccess;
-        access = MJApiSessionAccessUser;
+        access = MJApiOAuthSesionAccessUser;
     }
-    else if (_oauthForAppAccess.isValid)
+    else if ([_oauthForAppAccess isValidWithOffset:_validTokenOffsetTimeInterval])
     {
         oauth = _oauthForAppAccess;
-        access = MJApiSessionAccessApp;
+        access = MJApiOAuthSesionAccessApp;
     }
     
     // Set the oauth authorization headers

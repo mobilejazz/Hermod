@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		529D82861B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 529D82851B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m */; };
 		798656D645F82E974657C2EB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC53E33C006E2F61BAB99803 /* libPods.a */; };
-		D203B7AB1BCE72F80088C315 /* MJApiSession.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7A81BCE72F80088C315 /* MJApiSession.m */; settings = {ASSET_TAGS = (); }; };
-		D203B7AC1BCE72F80088C315 /* MJApiSessionOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AA1BCE72F80088C315 /* MJApiSessionOAuth.m */; settings = {ASSET_TAGS = (); }; };
-		D203B7AF1BCE74990088C315 /* MJApiClientKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AE1BCE74990088C315 /* MJApiClientKeychainManager.m */; settings = {ASSET_TAGS = (); }; };
+		D203B7AB1BCE72F80088C315 /* MJApiOAuthSession.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7A81BCE72F80088C315 /* MJApiOAuthSession.m */; };
+		D203B7AC1BCE72F80088C315 /* MJApiOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AA1BCE72F80088C315 /* MJApiOAuth.m */; };
+		D203B7AF1BCE74990088C315 /* MJApiClientKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AE1BCE74990088C315 /* MJApiClientKeychainManager.m */; };
 		D20428D21AC400F3002F18FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D20428D11AC400F3002F18FD /* main.m */; };
 		D20428D51AC400F3002F18FD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D20428D41AC400F3002F18FD /* AppDelegate.m */; };
 		D20428D81AC400F3002F18FD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D20428D71AC400F3002F18FD /* ViewController.m */; };
@@ -43,10 +43,10 @@
 		482223E83B4EE011134C6956 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		529D82841B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJHTTPOfflineCacheSessionManager.h; sourceTree = "<group>"; };
 		529D82851B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJHTTPOfflineCacheSessionManager.m; sourceTree = "<group>"; };
-		D203B7A71BCE72F80088C315 /* MJApiSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiSession.h; sourceTree = "<group>"; };
-		D203B7A81BCE72F80088C315 /* MJApiSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiSession.m; sourceTree = "<group>"; };
-		D203B7A91BCE72F80088C315 /* MJApiSessionOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiSessionOAuth.h; sourceTree = "<group>"; };
-		D203B7AA1BCE72F80088C315 /* MJApiSessionOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiSessionOAuth.m; sourceTree = "<group>"; };
+		D203B7A71BCE72F80088C315 /* MJApiOAuthSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiOAuthSession.h; sourceTree = "<group>"; };
+		D203B7A81BCE72F80088C315 /* MJApiOAuthSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiOAuthSession.m; sourceTree = "<group>"; };
+		D203B7A91BCE72F80088C315 /* MJApiOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiOAuth.h; sourceTree = "<group>"; };
+		D203B7AA1BCE72F80088C315 /* MJApiOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiOAuth.m; sourceTree = "<group>"; };
 		D203B7AD1BCE74990088C315 /* MJApiClientKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJApiClientKeychainManager.h; sourceTree = "<group>"; };
 		D203B7AE1BCE74990088C315 /* MJApiClientKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJApiClientKeychainManager.m; sourceTree = "<group>"; };
 		D20428CC1AC400F3002F18FD /* ApiClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApiClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,10 +197,10 @@
 				D20429031AC4019D002F18FD /* MJJSONResponseSerializer.m */,
 				529D82841B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.h */,
 				529D82851B74F51C00EEC7FB /* MJHTTPOfflineCacheSessionManager.m */,
-				D203B7A71BCE72F80088C315 /* MJApiSession.h */,
-				D203B7A81BCE72F80088C315 /* MJApiSession.m */,
-				D203B7A91BCE72F80088C315 /* MJApiSessionOAuth.h */,
-				D203B7AA1BCE72F80088C315 /* MJApiSessionOAuth.m */,
+				D203B7A71BCE72F80088C315 /* MJApiOAuthSession.h */,
+				D203B7A81BCE72F80088C315 /* MJApiOAuthSession.m */,
+				D203B7A91BCE72F80088C315 /* MJApiOAuth.h */,
+				D203B7AA1BCE72F80088C315 /* MJApiOAuth.m */,
 			);
 			name = "Source Code";
 			path = "../../Source Code";
@@ -370,12 +370,12 @@
 			files = (
 				D204290E1AC401D1002F18FD /* NSString+MJApiClientMD5Hashing.m in Sources */,
 				D20429041AC4019D002F18FD /* MJApiClient.m in Sources */,
-				D203B7AB1BCE72F80088C315 /* MJApiSession.m in Sources */,
+				D203B7AB1BCE72F80088C315 /* MJApiOAuthSession.m in Sources */,
 				D20429061AC4019D002F18FD /* MJApiRequest.m in Sources */,
 				D20429091AC4019D002F18FD /* MJApiUploadRequest.m in Sources */,
 				D20429081AC4019D002F18FD /* MJApiResponse.m in Sources */,
 				D20428D81AC400F3002F18FD /* ViewController.m in Sources */,
-				D203B7AC1BCE72F80088C315 /* MJApiSessionOAuth.m in Sources */,
+				D203B7AC1BCE72F80088C315 /* MJApiOAuth.m in Sources */,
 				D20428D51AC400F3002F18FD /* AppDelegate.m in Sources */,
 				D20428D21AC400F3002F18FD /* main.m in Sources */,
 				D204290A1AC4019D002F18FD /* MJJSONResponseSerializer.m in Sources */,
