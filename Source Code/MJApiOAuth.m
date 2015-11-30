@@ -14,14 +14,41 @@
 // limitations under the License.
 //
 
-#import "MJApiSessionOAuth.h"
+#import "MJApiOAuth.h"
 
-@implementation MJApiSessionOAuth
+@implementation MJApiOAuthConfiguration
+
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        _accessTokenKey = @"access_token";
+        _refreshTokenKey = @"refresh_token";
+        _expiresInKey = @"expires_in";
+        _tokenTypeKey = @"token_type";
+        _scopeKey = @"scope";
+        
+        _expiryDateBlock = ^NSDate*(id value) {
+            NSTimeInterval timeInterval = [value doubleValue];
+            NSDate *date = [NSDate dateWithTimeIntervalSinceNow:timeInterval];
+            return date;
+        };
+    }
+    return self;
+}
+
+@end
+
+#pragma mark -
+
+@implementation MJApiOAuth
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
-    if (self) {
+    if (self)
+    {
         _accessToken = [aDecoder decodeObjectForKey:@"accessToken"];
         _refreshToken = [aDecoder decodeObjectForKey:@"refreshToken"];
         _expiryDate = [aDecoder decodeObjectForKey:@"expiryDate"];
@@ -40,25 +67,30 @@
     [aCoder encodeObject:_scope forKey:@"scope"];
 }
 
-- (id)initWithDictionary:(NSDictionary*)dictionary
+- (id)initWithJSON:(NSDictionary*)JSONDict configuration:(MJApiOAuthConfiguration*)configuration;
 {
     self = [super init];
     if (self)
     {
-        _accessToken = dictionary[@"access_token"];
-        _refreshToken = dictionary[@"refresh_token"];
-        _expiryDate = [NSDate dateWithTimeIntervalSinceNow:[dictionary[@"expires_in"] floatValue]];
-        _tokenType = dictionary[@"token_type"];
-        _scope = dictionary[@"scope"];
-                                  
+        _accessToken = JSONDict[configuration.accessTokenKey];
+        _refreshToken = JSONDict[configuration.refreshTokenKey];
+        _expiryDate = configuration.expiryDateBlock(JSONDict[configuration.expiresInKey]);
+        _tokenType = JSONDict[configuration.tokenTypeKey];
+        _scope = JSONDict[configuration.scopeKey];
     }
     return self;
 }
 
 #pragma mark Public Methods
 
-- (BOOL)isValid {
-    return _accessToken.length > 0 && _expiryDate.timeIntervalSinceNow > 60;
+- (BOOL)isValid
+{
+    return [self isValidWithOffset:0];
+}
+
+- (BOOL)isValidWithOffset:(NSTimeInterval)offset
+{
+    return _accessToken.length > 0 && _expiryDate.timeIntervalSinceNow > offset;
 }
 
 @end

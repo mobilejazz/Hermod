@@ -10,7 +10,7 @@
 #import <XCTest/XCTest.h>
 
 #import "MJApiClient.h"
-#import "MJApiSession.h"
+#import "MJApiOAuthSession.h"
 
 @interface ApiClientTests : XCTestCase
 
