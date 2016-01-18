@@ -63,7 +63,7 @@ static __MJApiIntStrPair HTTPMethodPair [] = {
 
 static NSInteger HTTPMethodPairSize = sizeof(HTTPMethodPair)/sizeof(__MJApiIntStrPair);
 
-HTTPMethod HTTPMethodPairFromNSString(NSString *string)
+HTTPMethod HTTPMethodFromNSString(NSString *string)
 {
     return (HTTPMethod)__MJApiIntStrPairGetIntegerFromString(HTTPMethodPair, HTTPMethodPairSize, string);
 }

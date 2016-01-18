@@ -146,15 +146,17 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
  ** ************************************************* **/
 
 /**
- * Set a barear token (typically from OAuth access tokens).
+ * Set a barear token (typically from OAuth access tokens). Replaces the basic authentication header.
  * @param The authorization token.
+ * @discussion If nil, this method will remove the bearer token header.
  **/
 - (void)setBearerToken:(NSString*)token;
 
 /**
- * Set a basic authorization setup.
+ * Set a basic authorization setup. Replaces the bearer token header.
  * @param username The username.
  * @param password The password.
+ * @discussion If username or password are nil (or both are nil), this method will remove the basic authentication header.
  **/
 - (void)setBasicAuthWithUsername:(NSString*)username password:(NSString*)password;
 

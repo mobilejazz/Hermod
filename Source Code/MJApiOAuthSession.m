@@ -259,6 +259,16 @@
     NSAssert(_clientId != nil, @"client id is not set.");
     NSAssert(_clientSecret != nil, @"client secret is not set.");
     
+    if (!refreshToken)
+    {
+        // If refresh token is not available, returning an HTTP Bad Request (400) error.
+        if (completionBlock)
+            completionBlock(nil, [NSError errorWithDomain:NSURLErrorDomain
+                                                     code:400
+                                                 userInfo:@{NSLocalizedDescriptionKey: @"Cannot refresh token because no refresh_token is provided"}]);
+        return;
+    }
+    
     MJApiRequest *request = [MJApiRequest requestWithPath:_apiOAuthPath];
     request.httpMethod = HTTPMethodPOST;
     request.parameters = @{@"grant_type": @"refresh_token",
