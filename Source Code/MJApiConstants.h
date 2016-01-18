@@ -46,7 +46,7 @@ typedef NS_ENUM(NSUInteger, HTTPMethod)
 /**
  * Use this method to convert from NSSString to HTTPMethod.
  **/
-HTTPMethod HTTPMethodPairFromNSString(NSString *string);
+HTTPMethod HTTPMethodFromNSString(NSString *string);
 
 /**
  * Use this method to convert from HTTPMethod to NSString.

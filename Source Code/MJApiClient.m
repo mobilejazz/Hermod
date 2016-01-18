@@ -114,14 +114,9 @@
     {
         [_httpSessionManager.requestSerializer setAuthorizationHeaderFieldWithUsername:username password:password];
     }
-    else if (username == nil && password == nil)
+    else // if (username == nil && password == nil)
     {
         [self removeAuthorizationHeaders];
-    }
-    else
-    {
-        NSString *reason = @"Username or password are nil. Cannot set the Authorization headers. Fix by passing no nil values or both values as nil (to remove current authorization headers).";
-        [[NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil] raise];
     }
 }
 
@@ -212,7 +207,6 @@
             if (response.error)
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    
                     if ([_delegate respondsToSelector:@selector(apiClient:didReceiveErrorInResponse:)])
                         [_delegate apiClient:self didReceiveErrorInResponse:response];
                 });
@@ -258,7 +252,6 @@
             if (response.error)
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    
                     if ([_delegate respondsToSelector:@selector(apiClient:didReceiveErrorInResponse:)])
                         [_delegate apiClient:self didReceiveErrorInResponse:response];
                 });
@@ -349,7 +342,6 @@
         NSLog(@"[ApiClient] REQUEST:\n%@\n%@\n\n", request.description, curl);
     }
     
-
     request.finalURLRequest = sessionDataTask.originalRequest;
 }
 
