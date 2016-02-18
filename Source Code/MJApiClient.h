@@ -57,6 +57,16 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientRequestSerializerType)
     MJApiClientRequestSerializerTypeFormUrlencoded = 1,
 };
 
+typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
+{
+    /** JSON responses */
+    MJApiClientResponseSerializerTypeJSON = 0,
+    
+    /** RAW responses */
+    MJApiClientResponseSerializerTypeRaw = 1,
+};
+
+
 @protocol MJApiClientDelegate;
 
 /* ************************************************************************************************** */
@@ -88,9 +98,14 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientRequestSerializerType)
 @property (nonatomic, assign, readwrite) MJApiClientCacheManagement cacheManagement;
 
 /**
- * The serializer type. Default value is `MJApiClientRequestSerializerTypeJSON`.
+ * The request serializer type. Default value is `MJApiClientRequestSerializerTypeJSON`.
  **/
-@property (nonatomic, assign, readwrite) MJApiClientRequestSerializerType serializerType;
+@property (nonatomic, assign, readwrite) MJApiClientRequestSerializerType requestSerializerType;
+
+/**
+ * The response serializer type. Default value is `MJApiClientResponseSerializerTypeJSON`.
+ **/
+@property (nonatomic, assign, readwrite) MJApiClientResponseSerializerType responseSerializerType;
 
 /**
  * Requests completion block will be executed on the given queue.
