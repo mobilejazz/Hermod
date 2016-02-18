@@ -48,6 +48,15 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
     MJApiClientLogLevelResponses    = 1 << 1,
 };
 
+typedef NS_OPTIONS(NSUInteger, MJApiClientRequestSerializerType)
+{
+    /** applicaiton/JSON */
+    MJApiClientRequestSerializerTypeJSON = 0,
+
+    /** applicaiton/x-www-form-urlencoded */
+    MJApiClientRequestSerializerTypeFormUrlencoded = 1,
+};
+
 @protocol MJApiClientDelegate;
 
 /* ************************************************************************************************** */
@@ -77,6 +86,11 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientLogLevel)
  * The cache managemenet strategy. Default value is `MJApiClientCacheManagementDefault`.
  **/
 @property (nonatomic, assign, readwrite) MJApiClientCacheManagement cacheManagement;
+
+/**
+ * The serializer type. Default value is `MJApiClientRequestSerializerTypeJSON`.
+ **/
+@property (nonatomic, assign, readwrite) MJApiClientRequestSerializerType serializerType;
 
 /**
  * Requests completion block will be executed on the given queue.
