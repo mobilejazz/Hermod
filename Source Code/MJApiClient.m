@@ -36,7 +36,7 @@
     AFHTTPSessionManager *_httpSessionManager;
     
     AFHTTPRequestSerializer *_requestSerializer;
-    MJJSONResponseSerializer *_jsonResponseSerializer;
+    AFHTTPResponseSerializer *_responseSerializer;
 }
 
 - (id)init
@@ -50,7 +50,8 @@
         configurator.apiPath = apiPath;
         configurator.host = host;
         configurator.cacheManagement = MJApiClientCacheManagementDefault;
-        configurator.serializerType = MJApiClientRequestSerializerTypeJSON;
+        configurator.requestSerializerType = MJApiClientRequestSerializerTypeJSON;
+        configurator.responseSerializerType = MJApiClientResponseSerializerTypeJSON;
     }];
 }
 
@@ -84,18 +85,26 @@
         }
         
         // Request serializer
-        if (configurator.serializerType == MJApiClientRequestSerializerTypeJSON)
+        if (configurator.requestSerializerType == MJApiClientRequestSerializerTypeJSON)
         {
             _requestSerializer = [[AFJSONRequestSerializer alloc] init];
         }
-        else if (configurator.serializerType == MJApiClientRequestSerializerTypeFormUrlencoded)
+        else if (configurator.requestSerializerType == MJApiClientRequestSerializerTypeFormUrlencoded)
         {
             _requestSerializer = [[AFHTTPRequestSerializer alloc] init];
         }
         
         // Response serializer
-        _jsonResponseSerializer = [[MJJSONResponseSerializer alloc] init];
-        _jsonResponseSerializer.readingOptions = NSJSONReadingAllowFragments;
+        if (configurator.responseSerializerType == MJApiClientResponseSerializerTypeJSON)
+        {
+            MJJSONResponseSerializer *jsonResponseSerializer = [[MJJSONResponseSerializer alloc] init];
+            jsonResponseSerializer.readingOptions = NSJSONReadingAllowFragments;
+            _responseSerializer = jsonResponseSerializer;
+        }
+        else if (configurator.responseSerializerType == MJApiClientResponseSerializerTypeRaw)
+        {
+            _responseSerializer = [[AFHTTPResponseSerializer alloc] init];
+        }
         
         // Setting the request language
         NSString *language = [[NSLocale preferredLanguages] firstObject];
@@ -103,7 +112,7 @@
         
         // Configuring serializers
         _httpSessionManager.requestSerializer = _requestSerializer;
-        _httpSessionManager.responseSerializer = _jsonResponseSerializer;
+        _httpSessionManager.responseSerializer = _responseSerializer;
     }
     return self;
 }
