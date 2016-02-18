@@ -35,7 +35,7 @@
 {
     AFHTTPSessionManager *_httpSessionManager;
     
-    AFJSONRequestSerializer *_jsonRequestSerializer;
+    AFHTTPRequestSerializer *_requestSerializer;
     MJJSONResponseSerializer *_jsonResponseSerializer;
 }
 
@@ -50,16 +50,23 @@
         configurator.apiPath = apiPath;
         configurator.host = host;
         configurator.cacheManagement = MJApiClientCacheManagementDefault;
+        configurator.serializerType = MJApiClientRequestSerializerTypeJSON;
     }];
 }
 
 - (id)initWithConfigurator:(void (^)(MJAPiClientConfigurator *configurator))configuratorBlock;
 {
+    if (!configuratorBlock)
+    {
+        NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:@"The configurator block cannot be nil!" userInfo:nil];
+        @throw exception;
+    }
+    
     self = [super init];
     if (self)
     {
         MJAPiClientConfigurator *configurator = [MJAPiClientConfigurator new];
-        configuratorBlock (configurator);
+        configuratorBlock(configurator);
         
         _host = configurator.host;
         _apiPath = configurator.apiPath;
@@ -76,19 +83,26 @@
             _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
         }
         
-        // Creating serializers
-        _jsonRequestSerializer = [[AFJSONRequestSerializer alloc] init];
-        _jsonResponseSerializer = [[MJJSONResponseSerializer alloc] init];
+        // Request serializer
+        if (configurator.serializerType == MJApiClientRequestSerializerTypeJSON)
+        {
+            _requestSerializer = [[AFJSONRequestSerializer alloc] init];
+        }
+        else if (configurator.serializerType == MJApiClientRequestSerializerTypeFormUrlencoded)
+        {
+            _requestSerializer = [[AFHTTPRequestSerializer alloc] init];
+        }
         
-        // Allowing fragments on JSON responses.
+        // Response serializer
+        _jsonResponseSerializer = [[MJJSONResponseSerializer alloc] init];
         _jsonResponseSerializer.readingOptions = NSJSONReadingAllowFragments;
         
         // Setting the request language
         NSString *language = [[NSLocale preferredLanguages] firstObject];
-        [_jsonRequestSerializer setValue:language forHTTPHeaderField:@"Accept-Language"];
+        [_requestSerializer setValue:language forHTTPHeaderField:@"Accept-Language"];
         
         // Configuring serializers
-        _httpSessionManager.requestSerializer = _jsonRequestSerializer;
+        _httpSessionManager.requestSerializer = _requestSerializer;
         _httpSessionManager.responseSerializer = _jsonResponseSerializer;
     }
     return self;
