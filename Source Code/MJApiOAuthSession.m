@@ -183,8 +183,14 @@
     _oauthForAppAccess = nil;
     _oauthForUserAccess = nil;
     
-    [self mjz_save];
     [self mjz_refreshApiClientAuthorization];
+    [self mjz_save];
+    
+    if ([_delegate respondsToSelector:@selector(session:didConfigureOAuth:forSessionAccess:)])
+        [_delegate session:self didConfigureOAuth:nil forSessionAccess:MJApiOAuthSesionAccessApp];
+    
+    if ([_delegate respondsToSelector:@selector(session:didConfigureOAuth:forSessionAccess:)])
+        [_delegate session:self didConfigureOAuth:nil forSessionAccess:MJApiOAuthSesionAccessUser];
 }
 
 - (void)loginWithUsername:(NSString*)username password:(NSString*)password completionBlock:(void (^)(NSError *error))completionBlock
