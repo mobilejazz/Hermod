@@ -25,6 +25,13 @@
 
 #pragma mark -
 
+@interface MJApiOAuthSession ()
+
+@property (nonatomic, strong, readwrite) MJApiOAuth *oauthForAppAccess;
+@property (nonatomic, strong, readwrite) MJApiOAuth *oauthForUserAccess;
+
+@end
+
 @implementation MJApiOAuthSession
 {
     NSOperationQueue *_requestOperationQueue;
@@ -89,6 +96,9 @@
     _oauthForAppAccess = oauthForAppAccess;
     [self mjz_refreshApiClientAuthorization];
     [self mjz_save];
+    
+    if ([_delegate respondsToSelector:@selector(session:didConfigureOAuth:forSessionAccess:)])
+        [_delegate session:self didConfigureOAuth:oauthForAppAccess forSessionAccess:MJApiOAuthSesionAccessApp];
 }
 
 - (void)setOauthForUserAccess:(MJApiOAuth *)oauthForUserAccess
@@ -96,6 +106,9 @@
     _oauthForUserAccess = oauthForUserAccess;
     [self mjz_refreshApiClientAuthorization];
     [self mjz_save];
+    
+    if ([_delegate respondsToSelector:@selector(session:didConfigureOAuth:forSessionAccess:)])
+        [_delegate session:self didConfigureOAuth:oauthForUserAccess forSessionAccess:MJApiOAuthSesionAccessUser];
 }
 
 #pragma mark Public Methods
@@ -197,7 +210,7 @@
             {
                 MJApiOAuth *oauth = [[MJApiOAuth alloc] initWithJSON:response.responseObject configuration:_oauthConfiguration];
                 self.oauthForUserAccess = oauth;
-                
+
                 if (completionBlock)
                     completionBlock(nil);
             }
@@ -208,6 +221,21 @@
             }
         }];
     }];
+}
+
+- (void)configureWithOAuth:(MJApiOAuth*)oauth forSessionAccess:(MJApiOAuthSesionAccess)sessionAccess
+{
+    if (sessionAccess == MJApiOAuthSesionAccessUser)
+    {
+        _oauthForUserAccess = oauth;
+    }
+    else if (sessionAccess == MJApiOAuthSesionAccessApp)
+    {
+        _oauthForAppAccess = oauth;
+    }
+    
+    [self mjz_refreshApiClientAuthorization];
+    [self mjz_save];
 }
 
 #pragma mark Private Mehtods
