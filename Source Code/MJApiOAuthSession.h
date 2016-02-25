@@ -70,6 +70,8 @@
 
 @end
 
+@protocol MJApiOAuthSessionDelegate;
+
 typedef NS_ENUM(NSUInteger, MJApiOAuthSesionAccess)
 {
     /** The session has no token access. */
@@ -145,5 +147,35 @@ typedef NS_ENUM(NSUInteger, MJApiOAuthSesionAccess)
  * @discussion After calling this method with a successfull login, the session configures itself.
  **/
 - (void)loginWithUsername:(NSString*)username password:(NSString*)password completionBlock:(void (^)(NSError *error))completionBlock;
+
+/**
+ * Manually configures an oauth for the given session access.
+ * @param oauth The oauth token to configure.
+ * @param sessionAccess The session access level for the given oauth.
+ **/
+- (void)configureWithOAuth:(MJApiOAuth*)oauth forSessionAccess:(MJApiOAuthSesionAccess)sessionAccess;
+
+/** ************************************************************************************************ **
+ * @name Delegates
+ ** ************************************************************************************************ **/
+
+@property (nonatomic, weak) id <MJApiOAuthSessionDelegate> delegate;
+
+@end
+
+
+/**
+ * Delegate object.
+ **/
+@protocol MJApiOAuthSessionDelegate <NSObject>
+
+@optional
+/**
+ * When obtaining and configuring a new oauth token, this method will be called.
+ * @param session The session object.
+ * @param oauthToken The oauth token.
+ * @param sessionAccess The oauth token session access level.
+ **/
+- (void)session:(MJApiOAuthSession*)session didConfigureOAuth:(MJApiOAuth*)oauth forSessionAccess:(MJApiOAuthSesionAccess)sessionAccess;
 
 @end
