@@ -69,7 +69,7 @@ request.parameters = @{@"email": email};
 ```
 ###1.4 Managing the URL Cache
 
-MJApiClient implement a basic offline simulation via the URL cache. To configure it, use the default init method of `MJApiClient` and set the `cacheManagement` of the `MJAPiClientConfigurator` to `MJApiClientCacheManagementOffline`. When configured, the app will use the URL Cache to return already cached respones when being offline.The default configuration the URLCache is ignored (via the `MJApiClientCacheManagementDefault` attribute).
+MJApiClient implements a basic offline simulation via the URL cache. To configure it, use the default init method of `MJApiClient` and set the `cacheManagement` of the `MJAPiClientConfigurator` to `MJApiClientCacheManagementOffline`. When configured, the app will use the URL Cache to return already cached respones when being offline. By default the `cacheManagement` is set to `MJApiClientCacheManagementDefault` (which ignores the URL cache when being offline).
 
 ```objective-c
 MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClientConfigurator *configurator) {
@@ -80,8 +80,8 @@ MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClient
     configurator.cacheManagement = MJApiClientCacheManagementOffline;
 }];
 ```
-###1.5 Response dispatc queue
-This library is built on top of AFNetworking. Therefore, when performing a requests, the response is returned asyncronously in the default `dispatch_queue_t` selected by AFNetworking, which usually is in the main queue.
+###1.5 Response dispatch queue
+This library is built on top of AFNetworking. Therefore, when performing a request, the response is returned asyncronously in the default `dispatch_queue_t` selected by AFNetworking, which usually is in the main queue.
 
 `MJApiClient` offers the option to set a custom dispatch_queue_t to return its request's responses in. This can be set globaly o per request.
 
@@ -102,12 +102,13 @@ MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClient
 ```
 
 ###1.6 Error Handling
-Use the `MJApiClientDelegate` object to create server-specific errors. For example, the following code would be the delegate of the api client:
+Use the `MJApiClientDelegate` object to create server-specific errors and manage them. 
+
+In the following method, it is possible to specify custom errors depending of the content of the HTTP response. If an error is returned, then MJApiClient will assume the request failed and will include the error in its `MJApiResponse`.
 
 ```objective-c
-#pragma mark MJApiClientDelegate
-
-- (NSError*)apiClient:(MJApiClient *)apiClient errorForResponseBody:(NSDictionary *)responseBody incomingError:(NSError *)error {
+- (NSError*)apiClient:(MJApiClient*)apiClient errorForResponseBody:(id)responseBody httpResponse:(NSHTTPURLResponse*)httpResponse incomingError:(NSError*)error 
+{
     if ([responseBody isKindOfClass:NSDictionary.class]) 
     {
         if (responseBody[@"error_code"]) 
@@ -121,6 +122,15 @@ Use the `MJApiClientDelegate` object to create server-specific errors. For examp
         }
     }
     return error;
+}
+```
+
+Finally, use the method `-apiClient:didReceiveErrorInResponse:` of `MJApiClientDelegate` to globaly manage errors. Typically, you can use it to log errors, show alerts, and even logout the logged-in user if an unauthorized error.
+
+```objective-c
+- (void)apiClient:(MJApiClient*)apiClient didReceiveErrorInResponse:(MJApiResponse*)response
+{
+    // Manage the error of the response.
 }
 ```
 
