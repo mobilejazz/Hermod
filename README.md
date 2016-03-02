@@ -5,7 +5,7 @@ User friendly API client on top of AFNetworking
 The easiest to import MJApiClient to your project is by using Cocoa Pods:
 
 ```
-pod 'MJApiClient', :git => 'https://github.com/mobilejazz/MJApiClient.git', :tag => '0.2.1'
+pod 'MJApiClient', :git => 'https://github.com/mobilejazz/MJApiClient.git', :tag => '0.3.9'
 ```
 
 ##1. API Client
