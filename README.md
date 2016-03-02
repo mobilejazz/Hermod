@@ -41,15 +41,13 @@ To create an upload request, instantiate the `MJApiUploadRequest` and add an arr
 In order to perform requests, MJApiClient provides a protocol called `MJApiRequestExecutor` that defines the following two methods:
 
 ```objective-c
-- (NSInteger)performRequest:(MJApiRequest*)request completionBlock:(MJApiResponseBlock)completionBlock;
-- (NSInteger)performRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath completionBlock:(MJApiResponseBlock)completionBlock;
+- (void)performRequest:(MJApiRequest*)request completionBlock:(MJApiResponseBlock)completionBlock;
+- (void)performRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath completionBlock:(MJApiResponseBlock)completionBlock;
 ```
 
-The first one uses the default `apiPath`, the second one uses a custom `apiPath`. The return of those methods is an identifier of the request. The response block will contain a `MJApiResponse` together with the identifier of the request. The error will be encapsulated inside the `MJApiResponse`.
+The first method uses the default apiClient's `apiPath`, the second method uses a custom `apiPath`. The response block contains a `MJApiResponse`. If error, it is going to be encapsulated inside the `MJApiResponse`.
 
-`MJApiClient` implements this protocol, there fore you can use it directly to perform a request. However, you can build your own request executors and do validation checks and other custom actions in the middle. As a good example of it, MJApiClient provides an OAuth session handler called `MJApiOAuthSession`. This object, which implements the `MJApiRequestExecutor` protocol, validates the OAuth state and configures an `MJApiClient` instance with the good HTTP authentication headers. To know more about this object, see documentation below.
-
-For example:
+`MJApiClient` implements this protocol. Therefore, you can use it directly to perform a request. However, you can build your own request executors and do validation checks and other custom actions in the middle. As a good example of it, MJApiClient provides an OAuth session handler called `MJApiOAuthSession`. This object, which implements the `MJApiRequestExecutor` protocol, validates the OAuth state and configures an `MJApiClient` instance with the good HTTP authentication headers. To know more about this object, see documentation below.
 
 ```objective-c
 id <MJApiRequestExecutor> requestExecutor = _myApiClient; 
@@ -69,6 +67,7 @@ request.parameters = @{@"email": email};
     }
 }];
 ```
+
 ###1.4 Configuring the API Client
 
 #### 1.4.1 Managing the URL Cache
