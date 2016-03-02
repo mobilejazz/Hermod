@@ -15,8 +15,10 @@ pod 'MJApiClient', :git => 'https://github.com/mobilejazz/MJApiClient.git', :tag
 To create a new API client you must specify the host domain as well as the API path where all requests will be directed to.
 
 ```objective-c
-MJApiClient *apiClient = [[MJApiClient alloc] initWithHost:@"http://www.domain.com"];
-apiClient.apiPath = @"/api_path_sample/v1";
+MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClientConfigurator *configurator) {
+    configurator.host = @"http://www.domain.com";
+    configurator.apiPath =  @"/api/v1";
+}];
 ```
 
 ###1.2 Creating requests and upload requests
@@ -65,9 +67,41 @@ request.parameters = @{@"email": email};
     }
 }];
 ```
+###1.4 Managing the URL Cache
 
-###1.4 Error Handling
+MJApiClient implement a basic offline simulation via the URL cache. To configure it, use the default init method of `MJApiClient` and set the `cacheManagement` of the `MJAPiClientConfigurator` to `MJApiClientCacheManagementOffline`. When configured, the app will use the URL Cache to return already cached respones when being offline.The default configuration the URLCache is ignored (via the `MJApiClientCacheManagementDefault` attribute).
 
+```objective-c
+MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClientConfigurator *configurator) {
+    configurator.host = @"http://www.domain.com";
+    configurator.apiPath =  @"/api/v1";
+    
+    // Use the URLCache to return already cached responses when being offline.
+    configurator.cacheManagement = MJApiClientCacheManagementOffline;
+}];
+```
+###1.5 Response dispatc queue
+This library is built on top of AFNetworking. Therefore, when performing a requests, the response is returned asyncronously in the default `dispatch_queue_t` selected by AFNetworking, which usually is in the main queue.
+
+`MJApiClient` offers the option to set a custom dispatch_queue_t to return its request's responses in. This can be set globaly o per request.
+
+To set it per request, set a `dispatch_queue_t` inside the `MJApiRequest`'s `completionBlockQueue` parameter. If not set (nil), then the response block will be execute on the MJApiClient's global queue.
+```objective-c
+MJApiRequest *request = [MJApiRequest requestWithPath:@"user/12345"];
+request.completionBlockQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+```
+To set the global queue use the `MJAPiClientConfigurator` object inside the init method. If not set, then the response block will be executed in the default AFNetworking reponse block queue.
+```objective-c
+MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClientConfigurator *configurator) {
+    configurator.host = @"http://www.domain.com";
+    configurator.apiPath =  @"/api/v1";
+    
+    // Set a custom queue for all response blocks
+    configurator.completionBlockQueue = dispatch_queue_create("com.myapp.api.completion-queue", DISPATCH_QUEUE_SERIAL);
+}];
+```
+
+###1.6 Error Handling
 Use the `MJApiClientDelegate` object to create server-specific errors. For example, the following code would be the delegate of the api client:
 
 ```objective-c
