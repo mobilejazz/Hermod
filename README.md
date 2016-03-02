@@ -38,25 +38,27 @@ To create an upload request, instantiate the `MJApiUploadRequest` and add an arr
 
 ###1.3 Performing requests
 
-To perfom a request use the `MJApiClient` methods:
+In order to perform requests, MJApiClient provides a protocol called `MJApiRequestExecutor` that defines the following two methods:
 
 ```objective-c
 - (NSInteger)performRequest:(MJApiRequest*)request completionBlock:(MJApiResponseBlock)completionBlock;
 - (NSInteger)performRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath completionBlock:(MJApiResponseBlock)completionBlock;
 ```
 
-The first one uses the default `apiPath`, the second one uses a custom `apiPath`. The return of those methods is an identifier of the request.
+The first one uses the default `apiPath`, the second one uses a custom `apiPath`. The return of those methods is an identifier of the request. The response block will contain a `MJApiResponse` together with the identifier of the request. The error will be encapsulated inside the `MJApiResponse`.
 
-The response block will contain a `MJApiResponse` together with the identifier of the request. The error will be encapsulated inside the `MJApiResponse`.
+`MJApiClient` implements this protocol, there fore you can use it directly to perform a request. However, you can build your own request executors and do validation checks and other custom actions in the middle. As a good example of it, MJApiClient provides an OAuth session handler called `MJApiOAuthSession`. This object, which implements the `MJApiRequestExecutor` protocol, validates the OAuth state and configures an `MJApiClient` instance with the good HTTP authentication headers. To know more about this object, see documentation below.
 
 For example:
 
 ```objective-c
+id <MJApiRequestExecutor> requestExecutor = _myApiClient; 
+
 MJApiRequest *request = [MJApiRequest requestWithPath:@"users/reset-password"];
 request.httpMethod = HTTPMethodPOST;
 request.parameters = @{@"email": email};
 
-[_apiClient performRequest:request completionBlock:^(MJApiResponse *response, NSInteger key) {
+[requestExecutor performRequest:request completionBlock:^(MJApiResponse *response, NSInteger key) {
     if (response.error == nil) 
     {
         NSLog(@"Response object: %@", [response.responseObject description]);
@@ -67,7 +69,9 @@ request.parameters = @{@"email": email};
     }
 }];
 ```
-###1.4 Managing the URL Cache
+###1.4 Configuring the API Client
+
+#### 1.4.1 Managing the URL Cache
 
 MJApiClient implements a basic offline simulation via the URL cache. To configure it, use the default init method of `MJApiClient` and set the `cacheManagement` of the `MJAPiClientConfigurator` to `MJApiClientCacheManagementOffline`. When configured, the app will use the URL Cache to return already cached respones when being offline. By default the `cacheManagement` is set to `MJApiClientCacheManagementDefault` (which ignores the URL cache when being offline).
 
@@ -80,7 +84,11 @@ MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClient
     configurator.cacheManagement = MJApiClientCacheManagementOffline;
 }];
 ```
-###1.5 Response dispatch queue
+####1.4.2 Selecting request and response serializers
+
+// TODO
+
+####1.4.3 Response dispatch queue
 This library is built on top of AFNetworking. Therefore, when performing a request, the response is returned asyncronously in the default `dispatch_queue_t` selected by AFNetworking, which usually is in the main queue.
 
 `MJApiClient` offers the option to set a custom dispatch_queue_t to return its request's responses in. This can be set globaly o per request.
@@ -101,7 +109,7 @@ MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClient
 }];
 ```
 
-###1.6 Error Handling
+###1.5 Error Handling
 Use the `MJApiClientDelegate` object to create server-specific errors and manage them. 
 
 In the following method, it is possible to specify custom errors depending of the content of the HTTP response. If an error is returned, then MJApiClient will assume the request failed and will include the error in its `MJApiResponse`.
