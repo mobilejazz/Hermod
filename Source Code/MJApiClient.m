@@ -92,6 +92,7 @@
         else if (configurator.requestSerializerType == MJApiClientRequestSerializerTypeFormUrlencoded)
         {
             _requestSerializer = [[AFHTTPRequestSerializer alloc] init];
+            [_requestSerializer setValue:@"application/x-www-form-urlencoded;charset=utf8" forHTTPHeaderField:@"Content-Type"];
         }
         
         // Response serializer

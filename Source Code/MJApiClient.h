@@ -53,7 +53,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientRequestSerializerType)
     /** applicaiton/JSON */
     MJApiClientRequestSerializerTypeJSON = 0,
 
-    /** applicaiton/x-www-form-urlencoded */
+    /** applicaiton/x-www-form-urlencoded with utf8 charset */
     MJApiClientRequestSerializerTypeFormUrlencoded = 1,
 };
 
@@ -65,7 +65,6 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
     /** RAW responses */
     MJApiClientResponseSerializerTypeRaw = 1,
 };
-
 
 @protocol MJApiClientDelegate;
 
