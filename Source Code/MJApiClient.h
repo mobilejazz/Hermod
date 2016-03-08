@@ -194,6 +194,25 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 - (void)removeAuthorizationHeaders;
 
 /** ************************************************* **
+ * @name Localization
+ ** ************************************************* **/
+
+/**
+ * If YES, automatically configures the Accept-Language HTTP header to the current device language. Default value is YES.
+ **/
+@property (nonatomic, assign) BOOL insertAcceptLanguageHeader;
+
+/**
+ * If YES, it will insert a language parameter inside all body requests. Default value is NO.
+ **/
+@property (nonatomic, assign) BOOL insertLanguageAsParameter;
+
+/**
+ * The name of the body request language parameter. Default value is "language".
+ **/
+@property (nonatomic, strong) NSString *languageParameterName;
+
+/** ************************************************* **
  * @name Delegate
  ** ************************************************* **/
 

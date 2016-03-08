@@ -107,9 +107,9 @@
             _responseSerializer = [[AFHTTPResponseSerializer alloc] init];
         }
         
-        // Setting the request language
-        NSString *language = [[NSLocale preferredLanguages] firstObject];
-        [_requestSerializer setValue:language forHTTPHeaderField:@"Accept-Language"];
+        self.insertAcceptLanguageHeader = YES;
+        self.insertLanguageAsParameter = NO;
+        self.languageParameterName = @"language";
         
         // Configuring serializers
         _httpSessionManager.requestSerializer = _requestSerializer;
@@ -149,6 +149,22 @@
     [_httpSessionManager.requestSerializer setValue:nil forHTTPHeaderField:@"Authorization"];
 }
 
+- (void)setInsertAcceptLanguageHeader:(BOOL)insertAcceptLanguageHeader
+{
+    _insertLanguageAsParameter = insertAcceptLanguageHeader;
+    
+    if (insertAcceptLanguageHeader)
+    {
+        NSString *language = [self mjz_requestLanguage];
+        [_requestSerializer setValue:language forHTTPHeaderField:@"Accept-Language"];
+    }
+    else
+    {
+        [_requestSerializer setValue:nil forHTTPHeaderField:@"Accept-Language"];
+    }
+}
+
+
 #pragma mark Private Methods
 
 - (NSString*)mjz_urlPathForRequest:(MJApiRequest*)request apiPath:(NSString*)apiPath
@@ -161,6 +177,11 @@
             return [_host stringByAppendingFormat:@"%@", request.path];
     }
     return nil;
+}
+
+- (NSString*)mjz_requestLanguage
+{
+    return [[NSLocale preferredLanguages] firstObject];
 }
 
 #pragma mark - Protocols
@@ -186,6 +207,15 @@
         return;
     }
     
+    // Adding language parameter if needed
+    if (_insertLanguageAsParameter && _languageParameterName.length > 0)
+    {
+        NSMutableDictionary *dict = [parameters mutableCopy];
+        NSString *language = [self mjz_requestLanguage];
+        [dict setObject:language forKey:_languageParameterName];
+        parameters = [dict copy];
+    }
+    
     dispatch_queue_t completionBlockQueue = request.completionBlockQueue;
     if (!completionBlockQueue)
     {
@@ -206,23 +236,13 @@
         if ([_delegate respondsToSelector:@selector(apiClient:errorForResponseBody:httpResponse:incomingError:)])
             error = [_delegate apiClient:self errorForResponseBody:responseObject httpResponse:httpResponse incomingError:nil];
         
-        MJApiResponse *response = nil;
+        MJApiResponse *response = [[MJApiResponse alloc] initWithRequest:request
+                                                            httpResponse:httpResponse
+                                                                  object:responseObject
+                                                                   error:error];
         
-        if (error)
-        {
-            response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse error:error];
-            response.responseObject = responseObject;
-            
-            if ((_logLevel & MJApiClientLogLevelResponses) != 0)
-                NSLog(@"[ApiClient] RESPONSE: FAILURE\n%@\n\n", response.description);
-        }
-        else
-        {
-            response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse responseObject:responseObject];
-            
-            if ((_logLevel & MJApiClientLogLevelResponses) != 0)
-                NSLog(@"[ApiClient] RESPONSE: SUCCESS\n%@\n\n", response.description);
-        }
+        if ((_logLevel & MJApiClientLogLevelResponses) != 0)
+            NSLog(@"[ApiClient] RESPONSE: %@\n%@\n\n", error!=nil?@"FAILURE":@"SUCCESS", response.description);
         
         dispatch_async(completionBlockQueue, ^{
             if (completionBlock)
@@ -251,23 +271,13 @@
                 error = [_delegate apiClient:self errorForResponseBody:body httpResponse:httpResponse incomingError:error];
         }
         
-        MJApiResponse *response = nil;
+        MJApiResponse *response = [[MJApiResponse alloc] initWithRequest:request
+                                                            httpResponse:httpResponse
+                                                                  object:body
+                                                                   error:error];
         
-        if (error)
-        {
-            response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse error:error];
-            response.responseObject = body;
-            
-            if ((_logLevel & MJApiClientLogLevelResponses) != 0)
-                NSLog(@"[ApiClient] RESPONSE: FAILURE\n%@\n\n", response.description);
-        }
-        else
-        {
-            response = [[MJApiResponse alloc] initWithRequest:request httpResponse:httpResponse responseObject:body];
-            
-            if ((_logLevel & MJApiClientLogLevelResponses) != 0)
-                NSLog(@"[ApiClient] RESPONSE: SUCCESS\n%@\n\n", response.description);
-        }
+        if ((_logLevel & MJApiClientLogLevelResponses) != 0)
+            NSLog(@"[ApiClient] RESPONSE: %@\n%@\n\n", error!=nil?@"FAILURE":@"SUCCESS", response.description);
         
         dispatch_async(completionBlockQueue, ^{
             if (completionBlock)

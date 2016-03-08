@@ -20,7 +20,7 @@
 /**
  * A MJApiResponse object contains the HTTP response from the server.
  **/
-@interface MJApiResponse : NSObject
+@interface MJApiResponse : NSObject <NSCoding, NSCopying>
 
 /** ************************************************* **
  * @name Initializers
@@ -30,21 +30,15 @@
  * Initializer for error responses.
  * @param request The original request.
  * @param response The HTTP headers response.
+ * @param object The response object.
  * @param error The error.
  * @return An initialized instance.
  * @discussion The only class that creates api responses is the `MJApiClient`. A developer will never have to create it.
  **/
-- (id)initWithRequest:(MJApiRequest*)request httpResponse:(NSHTTPURLResponse*)response error:(NSError*)error;
-
-/**
- * Initializer for succeed responses.
- * @param request The original request.
- * @param response The HTTP headers response.
- * @param responseObject The response object.
- * @return An initialized instance.
- * @discussion The only class that creates api responses is the `MJApiClient`. A developer will never have to create it.
- **/
-- (id)initWithRequest:(MJApiRequest*)request httpResponse:(NSHTTPURLResponse*)response responseObject:(id)responseObject;
+- (id)initWithRequest:(MJApiRequest*)request
+         httpResponse:(NSHTTPURLResponse*)response
+               object:(id)responseObject
+                error:(NSError*)error;
 
 /** ************************************************* **
  * @name Attributes
