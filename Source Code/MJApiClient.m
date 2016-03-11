@@ -211,6 +211,9 @@
     if (_insertLanguageAsParameter && _languageParameterName.length > 0)
     {
         NSMutableDictionary *dict = [parameters mutableCopy];
+        if (!dict)
+            dict = [NSMutableDictionary dictionary];
+        
         NSString *language = [self mjz_requestLanguage];
         [dict setObject:language forKey:_languageParameterName];
         parameters = [dict copy];
