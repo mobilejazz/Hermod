@@ -213,6 +213,16 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 @property (nonatomic, strong) NSString *languageParameterName;
 
 /** ************************************************* **
+ * @name Requests
+ ** ************************************************* **/
+
+/**
+ * A dictionary of parameters that are going to be added to all requests. Default is nil.
+ * @discussion Shared parameters are added before sending the URL request. If duplicated parameter names, the values in this dictionary will be the final ones.
+ **/
+@property (nonatomic, strong) NSDictionary *requestSharedParameters;
+
+/** ************************************************* **
  * @name Delegate
  ** ************************************************* **/
 

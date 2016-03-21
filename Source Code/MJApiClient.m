@@ -219,6 +219,17 @@
         parameters = [dict copy];
     }
     
+    // Adding request shared parameters
+    if (_requestSharedParameters.count > 0)
+    {
+        NSMutableDictionary *dict = [parameters mutableCopy];
+        if (!dict)
+            dict = [NSMutableDictionary dictionary];
+        
+        [dict addEntriesFromDictionary:_requestSharedParameters];
+        parameters = [dict copy];
+    }
+    
     dispatch_queue_t completionBlockQueue = request.completionBlockQueue;
     if (!completionBlockQueue)
     {
