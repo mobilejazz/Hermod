@@ -311,6 +311,7 @@
     {
         sessionDataTask = [_httpSessionManager GET:urlPath
                                         parameters:parameters
+                                          progress:nil
                                            success:taskCompletion
                                            failure:taskFailCompletion];
     }
@@ -347,6 +348,7 @@
         {
             sessionDataTask = [_httpSessionManager POST:urlPath
                                              parameters:parameters
+                                               progress:nil
                                                 success:taskCompletion
                                                 failure:taskFailCompletion];
         }

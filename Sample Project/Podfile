@@ -2,7 +2,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 inhibit_all_warnings!
 
 # MJApiClient dependencies
-pod 'AFNetworking', '~> 2.6.1'
+pod 'AFNetworking', '~> 3.0.4'
 pod 'FormatterKit/URLRequestFormatter', '~>1.8.0'
 
 # Removing unused localizations
