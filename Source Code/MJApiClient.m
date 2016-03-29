@@ -41,7 +41,11 @@
 
 - (id)init
 {
-    return [self initWithHost:nil apiPath:nil];
+    [[NSException exceptionWithName:NSInvalidArgumentException
+                             reason:@"To init a MJApiClient use the initializer -initWithConfigurator:"
+                           userInfo:nil] raise];
+    
+    return [self initWithHost:@"http://www.mydomain.com" apiPath:nil];
 }
 
 - (id)initWithHost:(NSString*)host apiPath:(NSString *)apiPath
@@ -118,6 +122,29 @@
     return self;
 }
 
+#pragma mark Properties
+
+- (void)setHeaderParameters:(NSDictionary *)headerParameters
+{
+    if (_headerParameters.count > 0)
+    {
+        // Removing old header parameters
+        [_headerParameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            [_httpSessionManager.requestSerializer setValue:nil forHTTPHeaderField:key];
+        }];
+    }
+    
+    _headerParameters = headerParameters;
+    
+    if (_headerParameters.count > 0)
+    {
+        // Adding new header parameters
+        [_headerParameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            [_httpSessionManager.requestSerializer setValue:obj forHTTPHeaderField:key];
+        }];
+    }
+}
+
 #pragma mark Public Methods
 
 - (void)setBearerToken:(NSString*)token
@@ -185,7 +212,7 @@
 }
 
 #pragma mark - Protocols
-#pragma mark MJApiRequestExecutor 
+#pragma mark MJApiRequestExecutor
 
 - (void)performRequest:(MJApiRequest*)request completionBlock:(MJApiResponseBlock)completionBlock
 {
@@ -385,7 +412,7 @@
                                              }
                                              failure:taskFailCompletion];
     }
-
+    
     if ((_logLevel & MJApiClientLogLevelRequests) != 0)
     {
         NSString *curl = [TTTURLRequestFormatter cURLCommandFromURLRequest:sessionDataTask.originalRequest];

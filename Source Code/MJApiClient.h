@@ -83,13 +83,13 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 /**
  * The host of the API client. Default value is nil.
  **/
-@property (nonatomic, strong, readwrite) NSString *host;
+@property (nonatomic, strong, readwrite, nonnull) NSString *host;
 
 /**
  * An aditional API route path to be inserted after the host and before the REST arguments. Default value is nil.
  * @discussion Must be prefixed with "/"
  **/
-@property (nonatomic, strong, readwrite) NSString *apiPath;
+@property (nonatomic, strong, readwrite, nullable) NSString *apiPath;
 
 /**
  * The cache managemenet strategy. Default value is `MJApiClientCacheManagementDefault`.
@@ -110,7 +110,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
  * Requests completion block will be executed on the given queue.
  * @discussion If nil, blocks will be executed on the main queue.
  **/
-@property (nonatomic, strong, readwrite) dispatch_queue_t completionBlockQueue;
+@property (nonatomic, strong, readwrite, nullable) dispatch_queue_t completionBlockQueue;
 
 @end
 
@@ -134,14 +134,14 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
  * @param apiPath Additiona API route
  * @return An initialized instance.
  **/
-- (id)initWithHost:(NSString*)host apiPath:(NSString *)apiPath;
+- (instancetype _Nonnull)initWithHost:(NSString * _Nonnull)host apiPath:(NSString * _Nullable)apiPath;
 
 /**
  *  Designated initializer.
  *  @param configuratorBlock A MJApiClientConfigurator block
  *  @return The instance initialized
  */
-- (id)initWithConfigurator:(void (^)(MJAPiClientConfigurator *configurator))configuratorBlock;
+- (instancetype _Nonnull)initWithConfigurator:(void (^_Nonnull)(MJAPiClientConfigurator * _Nonnull configurator))configuratorBlock;
 
 /** ************************************************* **
  * @name Configuring the client
@@ -150,13 +150,13 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 /**
  * The host of the API client.
  **/
-@property (nonatomic, strong, readonly) NSString *host;
+@property (nonatomic, strong, readonly, nonnull) NSString *host;
 
 /**
  * An aditional API route path to be inserted after the host and before the REST arguments.
  * @discussion Must be prefixed with "/"
  **/
-@property (nonatomic, strong, readonly) NSString *apiPath;
+@property (nonatomic, strong, readonly, nullable) NSString *apiPath;
 
 /**
  * The cache managemenet strategy.
@@ -167,7 +167,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
  * Requests completion block will be executed on the given queue.
  * @discussion If nil, blocks will be executed on the main queue.
  **/
-@property (nonatomic, strong, readonly) dispatch_queue_t completionBlockQueue;
+@property (nonatomic, strong, readonly, nullable) dispatch_queue_t completionBlockQueue;
 
 /** ************************************************* **
  * @name Authorization Headers
@@ -178,7 +178,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
  * @param The authorization token.
  * @discussion If nil, this method will remove the bearer token header.
  **/
-- (void)setBearerToken:(NSString*)token;
+- (void)setBearerToken:(NSString * _Nullable)token;
 
 /**
  * Set a basic authorization setup. Replaces the bearer token header.
@@ -186,12 +186,21 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
  * @param password The password.
  * @discussion If username or password are nil (or both are nil), this method will remove the basic authentication header.
  **/
-- (void)setBasicAuthWithUsername:(NSString*)username password:(NSString*)password;
+- (void)setBasicAuthWithUsername:(NSString * _Nonnull)username password:(NSString * _Nonnull)password;
 
 /**
  * Clears all authorization headers.
  **/
 - (void)removeAuthorizationHeaders;
+
+/** ************************************************* **
+ * @name HTTP Headers
+ ** ************************************************* **/
+
+/**
+ * Dictionary containing additional HTTP header parameters. Default is nil.
+ **/
+@property (nonatomic, strong, nullable) NSDictionary *headerParameters;
 
 /** ************************************************* **
  * @name Localization
@@ -210,7 +219,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 /**
  * The name of the body request language parameter. Default value is "language".
  **/
-@property (nonatomic, strong) NSString *languageParameterName;
+@property (nonatomic, strong, nonnull) NSString *languageParameterName;
 
 /** ************************************************* **
  * @name Requests
@@ -220,7 +229,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
  * A dictionary of parameters that are going to be added to all requests. Default is nil.
  * @discussion Shared parameters are added before sending the URL request. If duplicated parameter names, the values in this dictionary will be the final ones.
  **/
-@property (nonatomic, strong) NSDictionary *requestSharedParameters;
+@property (nonatomic, strong, nullable) NSDictionary *requestSharedParameters;
 
 /** ************************************************* **
  * @name Delegate
@@ -229,7 +238,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 /**
  * Delegate object.
  **/
-@property (nonatomic, weak) id <MJApiClientDelegate> delegate;
+@property (nonatomic, weak, nullable) id <MJApiClientDelegate> delegate;
 
 /** ************************************************* **
  * @name Logging
@@ -263,13 +272,13 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
  * @param error The incoming error (can be nil).
  * @discussion This method is called for every succeed and failed API response. Either the response body is not nil, the error is not nil or both are not nil.
  **/
-- (NSError*)apiClient:(MJApiClient*)apiClient errorForResponseBody:(id)responseBody httpResponse:(NSHTTPURLResponse*)httpResponse incomingError:(NSError*)error;
+- (NSError * _Nullable)apiClient:(MJApiClient * _Nonnull)apiClient errorForResponseBody:(id _Nullable)responseBody httpResponse:(NSHTTPURLResponse * _Nonnull)httpResponse incomingError:(NSError * _Nullable)error;
 
 /**
  * Notifies the delegate that an api response has got an error.
  * @param apiClient The API client.
  * @param response The API response with an error.
  **/
-- (void)apiClient:(MJApiClient*)apiClient didReceiveErrorInResponse:(MJApiResponse*)response;
+- (void)apiClient:(MJApiClient * _Nonnull)apiClient didReceiveErrorInResponse:(MJApiResponse * _Nonnull)response;
 
 @end
