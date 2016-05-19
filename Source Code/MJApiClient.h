@@ -107,6 +107,11 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 @property (nonatomic, assign, readwrite) MJApiClientResponseSerializerType responseSerializerType;
 
 /**
+ * The request timeout interval. Default value is 60 seconds.
+ **/
+@property (nonatomic, assign) NSTimeInterval timeoutInterval;
+
+/**
  * Requests completion block will be executed on the given queue.
  * @discussion If nil, blocks will be executed on the main queue.
  **/
@@ -227,9 +232,9 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 
 /**
  * A dictionary of parameters that are going to be added to all requests. Default is nil.
- * @discussion Shared parameters are added before sending the URL request. If duplicated parameter names, the values in this dictionary will be the final ones.
+ * @discussion Global parameters are added before sending the URL request. If duplicated parameter keys, the values in this dictionary will be the final ones.
  **/
-@property (nonatomic, strong, nullable) NSDictionary *requestSharedParameters;
+@property (nonatomic, strong, nullable) NSDictionary *requestGlobalParameters;
 
 /** ************************************************* **
  * @name Delegate

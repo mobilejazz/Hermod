@@ -71,6 +71,10 @@
     if (self)
     {
         MJAPiClientConfigurator *configurator = [MJAPiClientConfigurator new];
+        configurator.cacheManagement = MJApiClientCacheManagementDefault;
+        configurator.requestSerializerType = MJApiClientRequestSerializerTypeJSON;
+        configurator.responseSerializerType = MJApiClientResponseSerializerTypeJSON;
+        configurator.timeoutInterval = 60;
         configuratorBlock(configurator);
         
         _host = configurator.host;
@@ -111,6 +115,10 @@
             _responseSerializer = [[AFHTTPResponseSerializer alloc] init];
         }
         
+        // Configuring timout interval
+        _requestSerializer.timeoutInterval = configurator.timeoutInterval;
+        
+        // Configuring Language
         self.insertAcceptLanguageHeader = YES;
         self.insertLanguageAsParameter = NO;
         self.languageParameterName = @"language";
@@ -247,13 +255,13 @@
     }
     
     // Adding request shared parameters
-    if (_requestSharedParameters.count > 0)
+    if (_requestGlobalParameters.count > 0)
     {
         NSMutableDictionary *dict = [parameters mutableCopy];
         if (!dict)
             dict = [NSMutableDictionary dictionary];
         
-        [dict addEntriesFromDictionary:_requestSharedParameters];
+        [dict addEntriesFromDictionary:_requestGlobalParameters];
         parameters = [dict copy];
     }
     
