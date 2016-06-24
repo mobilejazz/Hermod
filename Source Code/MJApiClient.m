@@ -17,7 +17,11 @@
 #import "MJApiClient.h"
 
 #import <AFNetworking/AFNetworking.h>
+
+
+#if TARGET_OS_IOS
 #import <FormatterKit/TTTURLRequestFormatter.h>
+#endif
 
 #import "MJJSONResponseSerializer.h"
 
@@ -423,8 +427,12 @@
     
     if ((_logLevel & MJApiClientLogLevelRequests) != 0)
     {
+#if TARGET_OS_IOS
         NSString *curl = [TTTURLRequestFormatter cURLCommandFromURLRequest:sessionDataTask.originalRequest];
         NSLog(@"[ApiClient] REQUEST:\n%@\n%@\n\n", request.description, curl);
+#else
+        NSLog(@"[ApiClient] REQUEST:\n%@\n\n", request.description);
+#endif
     }
     
     request.finalURLRequest = sessionDataTask.originalRequest;
