@@ -27,7 +27,13 @@
 
 #import "MJHTTPOfflineCacheSessionManager.h"
 
-@implementation MJAPiClientConfigurator
+@implementation MJApiClientConfigurator
+
+- (void)configureWithConfiguration:(MJApiConfiguration * _Nonnull)configuration
+{
+    _serverPath = configuration.serverPath;
+    _apiPath = configuration.path;
+}
 
 @end
 
@@ -49,21 +55,21 @@
                              reason:@"To init a MJApiClient use the initializer -initWithConfigurator:"
                            userInfo:nil] raise];
     
-    return [self initWithHost:@"http://www.mydomain.com" apiPath:nil];
+    return [self initWithServerPath:@"http://www.mydomain.com" apiPath:nil];
 }
 
-- (id)initWithHost:(NSString*)host apiPath:(NSString *)apiPath
+- (id)initWithServerPath:(NSString*)serverPath apiPath:(NSString *)apiPath
 {
-    return [self initWithConfigurator:^(MJAPiClientConfigurator *configurator) {
+    return [self initWithConfigurator:^(MJApiClientConfigurator *configurator) {
         configurator.apiPath = apiPath;
-        configurator.host = host;
+        configurator.serverPath = serverPath;
         configurator.cacheManagement = MJApiClientCacheManagementDefault;
         configurator.requestSerializerType = MJApiClientRequestSerializerTypeJSON;
         configurator.responseSerializerType = MJApiClientResponseSerializerTypeJSON;
     }];
 }
 
-- (id)initWithConfigurator:(void (^)(MJAPiClientConfigurator *configurator))configuratorBlock;
+- (id)initWithConfigurator:(void (^)(MJApiClientConfigurator *configurator))configuratorBlock;
 {
     if (!configuratorBlock)
     {
@@ -74,14 +80,14 @@
     self = [super init];
     if (self)
     {
-        MJAPiClientConfigurator *configurator = [MJAPiClientConfigurator new];
+        MJApiClientConfigurator *configurator = [MJApiClientConfigurator new];
         configurator.cacheManagement = MJApiClientCacheManagementDefault;
         configurator.requestSerializerType = MJApiClientRequestSerializerTypeJSON;
         configurator.responseSerializerType = MJApiClientResponseSerializerTypeJSON;
         configurator.timeoutInterval = 60;
         configuratorBlock(configurator);
         
-        _host = configurator.host;
+        _serverPath = configurator.serverPath;
         _apiPath = configurator.apiPath;
         _cacheManagement = configurator.cacheManagement;
         _completionBlockQueue = configurator.completionBlockQueue;
@@ -89,11 +95,11 @@
         // Configuring the cache management
         if (configurator.cacheManagement == MJApiClientCacheManagementOffline)
         {
-            _httpSessionManager = [[MJHTTPOfflineCacheSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
+            _httpSessionManager = [[MJHTTPOfflineCacheSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_serverPath]];
         }
         else
         {
-            _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_host]];
+            _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_serverPath]];
         }
         
         // Request serializer
@@ -211,9 +217,9 @@
     if (request)
     {
         if (apiPath.length > 0)
-            return [_host stringByAppendingFormat:@"%@/%@", apiPath, request.path];
+            return [_serverPath stringByAppendingFormat:@"%@/%@", apiPath, request.path];
         else
-            return [_host stringByAppendingFormat:@"%@", request.path];
+            return [_serverPath stringByAppendingFormat:@"%@", request.path];
     }
     return nil;
 }

@@ -16,6 +16,10 @@
 
 #import "MJApiConstants.h"
 
+MJApiEnvironment * const MJApiEnvironmentProduction = @"production";
+MJApiEnvironment * const MJApiEnvironmentStaging = @"staging";
+MJApiEnvironment * const MJApiEnvironmentDevelopment = @"development";
+
 typedef struct ___MJApiIntStrPair
 {
     NSInteger integer;

@@ -81,7 +81,7 @@
         _validTokenOffsetTimeInterval = configurator.validTokenOffsetTimeInterval;
         _useAppToken = configurator.useAppToken;
         
-        NSString *string = [NSString stringWithFormat:@"host:%@::clientId:%@", _apiClient.host, _clientId];
+        NSString *string = [NSString stringWithFormat:@"host:%@::clientId:%@", _apiClient.serverPath, _clientId];
         _identifier = [string mjz_api_md5_stringWithMD5Hash];
 
         [self mjz_load];

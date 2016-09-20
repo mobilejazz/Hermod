@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>production</key>
+	<dict>
+		<key>scheme</key>
+		<string>http</string>
+		<key>host</key>
+		<string>www.mocky.io</string>
+		<key>path</key>
+		<string>/v2</string>
+	</dict>
+</dict>
+</plist>

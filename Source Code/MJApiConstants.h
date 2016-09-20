@@ -17,6 +17,18 @@
 #import <Foundation/Foundation.h>
 
 /**
+ * API Environment variable type.
+ **/
+typedef NSString MJApiEnvironment;
+
+/** Production environment **/
+extern MJApiEnvironment * const MJApiEnvironmentProduction;
+/** Staging environment **/
+extern MJApiEnvironment * const MJApiEnvironmentStaging;
+/** Development environment **/
+extern MJApiEnvironment * const MJApiEnvironmentDevelopment;
+
+/**
  * Enumeration containing all HTTP methods.
  **/
 typedef NS_ENUM(NSUInteger, HTTPMethod)

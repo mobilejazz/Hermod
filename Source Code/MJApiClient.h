@@ -20,6 +20,7 @@
 #import "MJApiUploadRequest.h"
 #import "MJApiResponse.h"
 #import "MJApiRequestExecutor.h"
+#import "MJApiConfigurationManager.h"
 
 /**
  * Cache managmenet flags.
@@ -74,7 +75,12 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 /**
  * The configurator object.
  **/
-@interface MJAPiClientConfigurator : NSObject
+@interface MJApiClientConfigurator : NSObject
+
+/**
+ * Automatic API Configuration.
+ **/
+- (void)configureWithConfiguration:(MJApiConfiguration * _Nonnull)configuration;
 
 /** ************************************************* **
  * @name Configurable properties
@@ -83,7 +89,7 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 /**
  * The host of the API client. Default value is nil.
  **/
-@property (nonatomic, strong, readwrite, nonnull) NSString *host;
+@property (nonatomic, strong, readwrite, nonnull) NSString *serverPath;
 
 /**
  * An aditional API route path to be inserted after the host and before the REST arguments. Default value is nil.
@@ -135,27 +141,27 @@ typedef NS_OPTIONS(NSUInteger, MJApiClientResponseSerializerType)
 
 /**
  * Deprecated initializer.
- * @param host The host.
- * @param apiPath Additiona API route
+ * @param serverPath The serverPath. For example: https://www.mydomain.com
+ * @param apiPath Additiona API route. For example: /api/v2
  * @return An initialized instance.
  **/
-- (instancetype _Nonnull)initWithHost:(NSString * _Nonnull)host apiPath:(NSString * _Nullable)apiPath;
+- (instancetype _Nonnull)initWithServerPath:(NSString * _Nonnull)serverPath apiPath:(NSString * _Nullable)apiPath;
 
 /**
  *  Designated initializer.
  *  @param configuratorBlock A MJApiClientConfigurator block
  *  @return The instance initialized
  */
-- (instancetype _Nonnull)initWithConfigurator:(void (^_Nonnull)(MJAPiClientConfigurator * _Nonnull configurator))configuratorBlock;
+- (instancetype _Nonnull)initWithConfigurator:(void (^_Nonnull)(MJApiClientConfigurator * _Nonnull configurator))configuratorBlock;
 
 /** ************************************************* **
  * @name Configuring the client
  ** ************************************************* **/
 
 /**
- * The host of the API client.
+ * The server path of the API client.
  **/
-@property (nonatomic, strong, readonly, nonnull) NSString *host;
+@property (nonatomic, strong, readonly, nonnull) NSString *serverPath;
 
 /**
  * An aditional API route path to be inserted after the host and before the REST arguments.

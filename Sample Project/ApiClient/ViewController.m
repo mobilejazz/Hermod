@@ -31,9 +31,12 @@ block();\
 {
     [super viewDidLoad];
     
-    self.apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClientConfigurator *configurator) {
-        configurator.apiPath = @"/v2";
-        configurator.host = @"http://www.mocky.io";//Testing using Mocki services
+    self.apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJApiClientConfigurator *configurator) {
+        
+        MJApiConfigurationManager *manager = [[MJApiConfigurationManager alloc] initWithPlistFileName:@"API-Config"];
+        MJApiConfiguration *configuration = [manager configurationForEnvironment:MJApiEnvironmentProduction];
+        [configurator configureWithConfiguration:configuration];
+        
         configurator.cacheManagement = MJApiClientCacheManagementOffline;
         configurator.completionBlockQueue = dispatch_queue_create("com.mobilejazz.background-queue", DISPATCH_QUEUE_SERIAL);
     }];
