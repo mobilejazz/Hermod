@@ -98,6 +98,7 @@ MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJApiClient
 }];
 ```
 The supported serializers are:
+
 **Request Serializers**
 - `MJApiClientRequestSerializerTypeJSON`: JSON format request (mimetype applicaiton/JSON)
 - `MJApiClientRequestSerializerTypeFormUrlencoded`: URL Encoded request (mimetype applicaiton/x-www-form-urlencoded with utf8 charset)
