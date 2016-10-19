@@ -16,7 +16,7 @@ To create a new API client you must specify the host domain as well as the API p
 
 ```objective-c
 MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClientConfigurator *configurator) {
-    configurator.host = @"http://www.domain.com";
+    configurator.serverPath = @"http://www.domain.com";
     configurator.apiPath =  @"/api/v1";
 }];
 ```
@@ -85,7 +85,30 @@ MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJAPiClient
 ```
 ####1.4.2 Selecting request and response serializers
 
-// TODO
+While configuring a MJApiClient instance, it is possible to customize the request and response serializers.
+
+```objective-c
+MJApiClient *apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJApiClientConfigurator * _Nonnull configurator) {
+    // Here goes the overall configuration
+    [...]
+    
+    // Configuration of request and response serializers
+    configurator.requestSerializerType = MJApiClientRequestSerializerTypeJSON;
+    configurator.responseSerializerType = MJApiClientResponseSerializerTypeJSON;
+}];
+```
+The supported serializers are:
+**Request Serializers**
+- `MJApiClientRequestSerializerTypeJSON`: JSON format request (mimetype applicaiton/JSON)
+- `MJApiClientRequestSerializerTypeFormUrlencoded`: URL Encoded request (mimetype applicaiton/x-www-form-urlencoded with utf8 charset)
+
+**Response Serializers**
+- `MJApiClientResponseSerializerTypeJSON`: JSON format response (response object will be `NSDictionary` or `NSArray`)
+- `MJApiClientResponseSerializerTypeRaw`: RAW response (response object will be `NSData`).
+
+By default, request and response serializers are set to JSON format. However, it is possible to change them to the other types.
+
+MJApiClient only support the listed types above. If there is a need for different type, the library will have to be extended and implemented.
 
 ####1.4.3 Response dispatch queue
 This library is built on top of AFNetworking. Therefore, when performing a request, the response is returned asyncronously in the default `dispatch_queue_t` selected by AFNetworking, which usually is in the main queue.
