@@ -177,8 +177,8 @@ To configure an `MJApiOAuthSession` just create a new instnace and use the `init
 MJApiOAuthSession *oauthSession = [[MJApiOAuthSession alloc] initWithConfigurator:^(MJApiOAuthSesionConfigurator *configurator) {
     configurator.apiClient = apiClient; // <-- configured MJApiClient instance
     configurator.apiOAuthPath = @"/api/oauth2/token";
-    configurator.clientId = @"thanksmate";
-    configurator.clientSecret = @"J7RfzradKEAGe2";
+    configurator.clientId = @"client_id";
+    configurator.clientSecret = @"client_secret";
 }];
 ```
 It is required to provide configured `MJApiClient` instance, the api path of the OAuth methods, the client ID and client secret.
