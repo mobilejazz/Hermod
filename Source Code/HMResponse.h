@@ -33,7 +33,7 @@
  * @param object The response object.
  * @param error The error.
  * @return An initialized instance.
- * @discussion The only class that creates api responses is the `HMClient`.
+ * @discussion The only class that creates api responses is the HMClient.
  **/
 - (id)initWithRequest:(HMRequest*)request
          httpResponse:(NSHTTPURLResponse*)response
