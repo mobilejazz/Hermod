@@ -37,7 +37,7 @@
 
 @end
 
-@interface `HMClient` ()
+@interface HMClient ()
 
 @end
 
@@ -52,7 +52,7 @@
 - (id)init
 {
     [[NSException exceptionWithName:NSInvalidArgumentException
-                             reason:@"To init a `HMClient` use the initializer -initWithConfigurator:"
+                             reason:@"To init a HMClient use the initializer -initWithConfigurator:"
                            userInfo:nil] raise];
     
     return [self initWithServerPath:@"http://www.mydomain.com" apiPath:nil];

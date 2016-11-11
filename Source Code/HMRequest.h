@@ -69,7 +69,7 @@
 
 /**
  * The completion block will be executed in the given queue. 
- * @discussion If nil, the default `HMClient` `completionBlockQueue` will be used.
+ * @discussion If nil, the default HMClient `completionBlockQueue` will be used.
  **/
 @property (nonatomic, strong) dispatch_queue_t completionBlockQueue;
 
@@ -78,7 +78,7 @@
  ** ************************************************* **/
 
 /**
- * This parameter is automatically set by the `HMClient` after creating the corresponding NSURLRequest.
+ * This parameter is automatically set by the HMClient after creating the corresponding NSURLRequest.
  * @discussion This value can be used to debug the created request.
  **/
 @property (nonatomic, strong) NSURLRequest *finalURLRequest;

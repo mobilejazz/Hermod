@@ -36,7 +36,7 @@
 {
     NSOperationQueue *_requestOperationQueue;
     
-    `HMClient` *_apiClient;
+    HMClient *_apiClient;
     NSString *_apiOAuthPath;
     NSString *_clientId;
     NSString *_clientSecret;

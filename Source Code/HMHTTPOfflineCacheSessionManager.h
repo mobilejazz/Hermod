@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import "AFHTTPSessionManager.h"
+#import <AFNetworking/AFNetworking.h>
 
 /**
  *  This session manager basically ovverride the GET method and add
