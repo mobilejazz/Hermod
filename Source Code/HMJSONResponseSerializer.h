@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import "AFURLResponseSerialization.h"
+#import <AFNetworking/AFNetworking.h>
 
 /**
  * The key of the HTTP response body that will be added in the `NSError` when a request failes.
