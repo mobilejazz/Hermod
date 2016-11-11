@@ -1,5 +1,5 @@
 {
-  "name": "Hermod",
+  "name": "Hermod-tvos",
   "version": "1.0.0",
   "summary": "User friendly HTTP client on top of AFNetworking",
   "description": "Hermod defines a simple, easy to use, intuitive and flexible HTTP client on top of AFNetworking.",
