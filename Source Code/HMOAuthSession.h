@@ -32,7 +32,7 @@
 /**
  * The API client.
  **/
-@property (nonatomic, strong) HMClient *apiClient;
+@property (nonatomic, strong) `HMClient` *apiClient;
 
 /**
  * The API path for OAuth requests. For example: "/api/v1/oauth/token".
@@ -122,7 +122,7 @@ typedef NS_ENUM(NSUInteger, HMOAuthSesionAccess)
 /**
  * The managed API client.
  **/
-@property (nonatomic, strong, readonly) HMClient *apiClient;
+@property (nonatomic, strong, readonly) `HMClient` *apiClient;
 
 /** ************************************************************************************************ **
  * @name Methods

@@ -19,7 +19,7 @@ block();\
 
 @interface ViewController ()
 
-@property (nonatomic, strong, readwrite) HMClient *apiClient;
+@property (nonatomic, strong, readwrite) `HMClient` *apiClient;
 
 @property (weak, nonatomic) IBOutlet UITextView *responseTextView;
 

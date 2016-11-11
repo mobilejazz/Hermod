@@ -78,7 +78,7 @@
  ** ************************************************* **/
 
 /**
- * This parameter is automatically set by the HMClient after creating the corresponding NSURLRequest.
+ * This parameter is automatically set by the `HMClient` after creating the corresponding NSURLRequest.
  * @discussion This value can be used to debug the created request.
  **/
 @property (nonatomic, strong) NSURLRequest *finalURLRequest;

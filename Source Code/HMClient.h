@@ -133,7 +133,7 @@ typedef NS_OPTIONS(NSUInteger, HMClientResponseSerializerType)
  * This class build on top of AFNetworking a user-friendly interface to manage API requests and responses. 
  * The only constraint is that the backend services must always accept and return application/json HTTP requests and responses.
  **/
-@interface HMClient : NSObject <HMRequestExecutor>
+@interface `HMClient` : NSObject <HMRequestExecutor>
 
 /** ************************************************* **
  * @name Getting the default manager
