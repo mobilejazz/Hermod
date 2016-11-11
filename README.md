@@ -1,3 +1,8 @@
+[![Version](https://cocoapod-badges.herokuapp.com/v/Hermod/badge.png)](http://cocoadocs.org/docsets/Hermod)
+[![Platform](https://cocoapod-badges.herokuapp.com/p/Hermod/badge.png)](http://cocoadocs.org/docsets/Hermod)
+[![CocoaDocs](https://img.shields.io/badge/docs-%E2%9C%93-blue.svg)](http://cocoadocs.org/docsets/Hermod)
+<!--- [![Build Status](https://travis-ci.org/mobilejazz/Motis.png)](https://travis-ci.org/mobilejazz/Motis)-->
+
 # Hermod
 User friendly HTTP client on top of AFNetworking
 
