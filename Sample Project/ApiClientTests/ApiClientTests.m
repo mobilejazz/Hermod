@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#import "MJApiClient.h"
-#import "MJApiOAuthSession.h"
+#import "HMClient.h"
+#import "HMOAuthSession.h"
 
 @interface ApiClientTests : XCTestCase
 

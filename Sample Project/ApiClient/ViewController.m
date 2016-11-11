@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "MJApiClient.h"
+#import "HMClient.h"
 
 #define DoInForeground(block) \
 if ([NSThread isMainThread]) \
@@ -19,7 +19,7 @@ block();\
 
 @interface ViewController ()
 
-@property (nonatomic, strong, readwrite) MJApiClient *apiClient;
+@property (nonatomic, strong, readwrite) HMClient *apiClient;
 
 @property (weak, nonatomic) IBOutlet UITextView *responseTextView;
 
@@ -31,27 +31,27 @@ block();\
 {
     [super viewDidLoad];
     
-    self.apiClient = [[MJApiClient alloc] initWithConfigurator:^(MJApiClientConfigurator *configurator) {
+    self.apiClient = [[HMClient alloc] initWithConfigurator:^(HMClientConfigurator *configurator) {
         
-        MJApiConfigurationManager *manager = [[MJApiConfigurationManager alloc] initWithPlistFileName:@"API-Config"];
-        MJApiConfiguration *configuration = [manager configurationForEnvironment:MJApiEnvironmentProduction];
+        HMConfigurationManager *manager = [[HMConfigurationManager alloc] initWithPlistFileName:@"API-Config"];
+        HMConfiguration *configuration = [manager configurationForEnvironment:HMEnvironmentProduction];
         [configurator configureWithConfiguration:configuration];
         
-        configurator.cacheManagement = MJApiClientCacheManagementOffline;
+        configurator.cacheManagement = HMClientCacheManagementOffline;
         configurator.completionBlockQueue = dispatch_queue_create("com.mobilejazz.background-queue", DISPATCH_QUEUE_SERIAL);
     }];
     
-    self.apiClient.logLevel = MJApiClientLogLevelRequests;
+    self.apiClient.logLevel = HMClientLogLevelRequests;
 }
 
 - (IBAction)getFakeRequest:(id)sender
 {    
-    MJApiRequest *request = [MJApiRequest requestWithPath:@"562158b5120000714c0113ff"];
+    HMRequest *request = [HMRequest requestWithPath:@"562158b5120000714c0113ff"];
     
     //NOTE: I am using Mocky.io to create a fake request with the custom header
     //          Cache-Control : max-age=30
     
-    [_apiClient performRequest:request completionBlock:^(MJApiResponse *response) {
+    [_apiClient performRequest:request completionBlock:^(HMResponse *response) {
         NSString *newString;
         if (response.error) {
             newString = [NSString stringWithFormat:@"Received error:\n%@\n", [response.error localizedDescription]];

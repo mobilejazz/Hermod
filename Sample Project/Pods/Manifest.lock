@@ -1,27 +1,31 @@
 PODS:
-  - AFNetworking (3.0.4):
-    - AFNetworking/NSURLSession (= 3.0.4)
-    - AFNetworking/Reachability (= 3.0.4)
-    - AFNetworking/Security (= 3.0.4)
-    - AFNetworking/Serialization (= 3.0.4)
-    - AFNetworking/UIKit (= 3.0.4)
-  - AFNetworking/NSURLSession (3.0.4):
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.0.4)
-  - AFNetworking/Security (3.0.4)
-  - AFNetworking/Serialization (3.0.4)
-  - AFNetworking/UIKit (3.0.4):
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - FormatterKit/URLRequestFormatter (1.8.0)
+  - FormatterKit/Resources (1.8.1)
+  - FormatterKit/URLRequestFormatter (1.8.1):
+    - FormatterKit/Resources
 
 DEPENDENCIES:
-  - AFNetworking (~> 3.0.4)
+  - AFNetworking (~> 3.1.0)
   - FormatterKit/URLRequestFormatter (~> 1.8.0)
 
 SPEC CHECKSUMS:
-  AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
-  FormatterKit: bddde83e054edf9d9ee14f9de3b3a5103db256f4
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  FormatterKit: 11ad17b983200629246a5a466f6f1bfa2df823cb
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: d1e5588f32edef4f690a1df536313bda72ba4d4e
+
+COCOAPODS: 1.1.1
