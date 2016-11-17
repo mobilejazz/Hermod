@@ -67,7 +67,8 @@
     [aCoder encodeObject:_scope forKey:@"scope"];
 }
 
-- (id)initWithJSON:(NSDictionary*)JSONDict configuration:(HMOAuthConfiguration*)configuration;
+- (instancetype)initWithJSON:(NSDictionary*)JSONDict
+               configuration:(HMOAuthConfiguration*)configuration;
 {
     self = [super init];
     if (self)
@@ -77,6 +78,24 @@
         _expiryDate = configuration.expiryDateBlock(JSONDict[configuration.expiresInKey]);
         _tokenType = JSONDict[configuration.tokenTypeKey];
         _scope = JSONDict[configuration.scopeKey];
+    }
+    return self;
+}
+
+- (instancetype)initWithAccessToken:(NSString*)accessToken
+                       refreshToken:(NSString*)refreshToken
+                         expiryDate:(NSDate*)expiryDate
+                          tokenType:(NSString*)tokenType
+                              scope:(NSString*)scope
+{
+    self = [super init];
+    if (self)
+    {
+        _accessToken = accessToken;
+        _refreshToken = refreshToken;
+        _expiryDate = expiryDate;
+        _tokenType = tokenType;
+        _scope = scope;
     }
     return self;
 }

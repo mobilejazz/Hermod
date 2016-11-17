@@ -49,6 +49,15 @@
     NSString *_identifier;
 }
 
++ (void)initialize
+{
+    // Adding old implementation of MJApiOAuth to maintain compatibility with old versions of Hermod.
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [NSKeyedUnarchiver setClass:HMOAuth.class forClassName:@"MJApiOAuth"];
+    });
+}
+
 - (id)init
 {
     return [self initWithConfigurator:^(HMOAuthSesionConfigurator *configurator) {

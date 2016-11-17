@@ -62,12 +62,27 @@
  ** ************************************************************************************************ **/
 
 /**
- * Network resposne initializer.
+ * OAuth object initializer.
  * @param JSONDict The JSON dictionary.
  * @param configuration The configuration.
  * @return The initialized instance.
  **/
-- (id)initWithJSON:(NSDictionary*)JSONDict configuration:(HMOAuthConfiguration*)configuration;
+- (instancetype)initWithJSON:(NSDictionary*)JSONDict configuration:(HMOAuthConfiguration*)configuration;
+
+/**
+ * OAuth object initializer.
+ * @param accessToken The access token.
+ * @param refreshToken The refresh token.
+ * @param expiryDate The expiry date.
+ * @param tokenType The token type.
+ * @param scope The scope.
+ * @return The initialized instance.
+ **/
+- (instancetype)initWithAccessToken:(NSString*)accessToken
+                       refreshToken:(NSString*)refreshToken
+                         expiryDate:(NSDate*)expiryDate
+                          tokenType:(NSString*)tokenType
+                              scope:(NSString*)scope;
 
 /** ************************************************************************************************ **
  * @name Properties
