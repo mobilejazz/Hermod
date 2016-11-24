@@ -173,7 +173,7 @@ Finally, use the method `-apiClient:didReceiveErrorInResponse:` of `HMClientDele
 
 ### 2. HMOAuthSession (OAuth Support)
 
-In order to support OAuth, `HMClient` has the class `HMOAuthSession`. This class will keep the OAuth session alive and perform the fetch and refresh of tokens. Furthermore, it implements the `HMRequestExecutor` protocol in order to perform requests with OAuth support.
+In order to support OAuth, Hermod has the class `HMOAuthSession`. This class will keep the OAuth session alive and perform the fetch and refresh of tokens. Furthermore, it implements the `HMRequestExecutor` protocol in order to perform requests with OAuth support.
 
 #### 2.1 Configuration
 
