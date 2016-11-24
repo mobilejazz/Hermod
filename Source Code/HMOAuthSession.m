@@ -418,12 +418,12 @@
     HMOAuthSesionAccess access = HMOAuthSesionAccessNone;
     HMOAuth *oauth = nil;
     
-    if ([_oauthForUserAccess isValidWithOffset:_validTokenOffsetTimeInterval])
+    if (_oauthForUserAccess != nil)
     {
         oauth = _oauthForUserAccess;
         access = HMOAuthSesionAccessUser;
     }
-    else if ([_oauthForAppAccess isValidWithOffset:_validTokenOffsetTimeInterval])
+    else if (_oauthForAppAccess != nil)
     {
         oauth = _oauthForAppAccess;
         access = HMOAuthSesionAccessApp;
@@ -436,9 +436,12 @@
         [_apiClient removeAuthorizationHeaders];
     
     // update the session access flag
-    [self willChangeValueForKey:@"sessionAccess"];
-    _sessionAccess = access;
-    [self didChangeValueForKey:@"sessionAccess"];
+    if (access != _sessionAccess)
+    {
+        [self willChangeValueForKey:@"sessionAccess"];
+        _sessionAccess = access;
+        [self didChangeValueForKey:@"sessionAccess"];
+    }
 }
 
 - (HMClientKeychainManager*)mjz_keychainManager
