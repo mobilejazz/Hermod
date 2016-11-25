@@ -3,6 +3,8 @@
 [![CocoaDocs](https://img.shields.io/badge/docs-%E2%9C%93-blue.svg)](http://cocoadocs.org/docsets/Hermod)
 <!--- [![Build Status](https://travis-ci.org/mobilejazz/Motis.png)](https://travis-ci.org/mobilejazz/Motis)-->
 
+![Hermod](https://raw.githubusercontent.com/mobilejazz/metadata/master/images/banners/mobile-jazz-hermod-ios.jpg)
+
 # Hermod
 User friendly HTTP client on top of AFNetworking
 
