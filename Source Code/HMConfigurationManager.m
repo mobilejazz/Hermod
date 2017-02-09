@@ -24,11 +24,12 @@
 
 @implementation HMConfiguration
 
-- (id)initWithDictionary:(NSDictionary *)dictionary
+- (id)initWithDictionary:(NSDictionary *)dictionary environment:(HMEnvironment *)environment
 {
     self = [super init];
     if (self)
     {
+	_environment:(HMEnvironment *)environment;
         _scheme = dictionary[@"scheme"];
         if (!_scheme)
         {
@@ -143,12 +144,24 @@
 
         if (dictionary)
         {
-            config = [[HMConfiguration alloc] initWithDictionary:dictionary];
+            config = [[HMConfiguration alloc] initWithDictionary:dictionary environment:environment];
             _dictionary[environment] = config;
         }
     }
 
     return config;
+}
+
+- (NSArray <HMConfiguration *> *)configurationList
+{
+	NSMutableArray *configurationList = [NSMutableArray array];
+	for (NSString *environment in [_plist allKeys])
+	{
+		HMConfiguration *configuration = [self configurationForEnvironment:environment];
+		[configurationList addObject:configuration];
+	}
+	
+	return [NSArray arrayWithArray:configurationList];
 }
 
 @end
