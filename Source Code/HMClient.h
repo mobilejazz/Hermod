@@ -154,6 +154,13 @@ typedef NS_OPTIONS(NSUInteger, HMClientResponseSerializerType)
  */
 - (instancetype _Nonnull)initWithConfigurator:(void (^_Nonnull)(HMClientConfigurator * _Nonnull configurator))configuratorBlock;
 
+/**
+ *Reconfigure the API client.
+ *
+ @param configuratorBlock A HMClientConfigurator block
+ */
+- (void)reconfigureWithConfigurator:(void (^_Nonnull)(HMClientConfigurator * _Nonnull configurator))configuratorBlock;
+
 /** ************************************************* **
  * @name Configuring the client
  ** ************************************************* **/

@@ -69,75 +69,35 @@
     }];
 }
 
-- (id)initWithConfigurator:(void (^)(HMClientConfigurator *configurator))configuratorBlock;
+- (id)initWithConfigurator:(void (^)(HMClientConfigurator *configurator))configuratorBlock
 {
-    if (!configuratorBlock)
-    {
-        NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:@"The configurator block cannot be nil!" userInfo:nil];
-        @throw exception;
-    }
-    
-    self = [super init];
-    if (self)
-    {
-        HMClientConfigurator *configurator = [HMClientConfigurator new];
-        configurator.cacheManagement = HMClientCacheManagementDefault;
-        configurator.requestSerializerType = HMClientRequestSerializerTypeJSON;
-        configurator.responseSerializerType = HMClientResponseSerializerTypeJSON;
-        configurator.timeoutInterval = 60;
-        configuratorBlock(configurator);
-        
-        _serverPath = configurator.serverPath;
-        _apiPath = configurator.apiPath;
-        _cacheManagement = configurator.cacheManagement;
-        _completionBlockQueue = configurator.completionBlockQueue;
-        
-        // Configuring the cache management
-        if (configurator.cacheManagement == HMClientCacheManagementOffline)
-        {
-            _httpSessionManager = [[HMHTTPOfflineCacheSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_serverPath]];
-        }
-        else
-        {
-            _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_serverPath]];
-        }
-        
-        // Request serializer
-        if (configurator.requestSerializerType == HMClientRequestSerializerTypeJSON)
-        {
-            _requestSerializer = [[AFJSONRequestSerializer alloc] init];
-        }
-        else if (configurator.requestSerializerType == HMClientRequestSerializerTypeFormUrlencoded)
-        {
-            _requestSerializer = [[AFHTTPRequestSerializer alloc] init];
-            [_requestSerializer setValue:@"application/x-www-form-urlencoded;charset=utf8" forHTTPHeaderField:@"Content-Type"];
-        }
-        
-        // Response serializer
-        if (configurator.responseSerializerType == HMClientResponseSerializerTypeJSON)
-        {
-            HMJSONResponseSerializer *jsonResponseSerializer = [[HMJSONResponseSerializer alloc] init];
-            jsonResponseSerializer.readingOptions = NSJSONReadingAllowFragments;
-            _responseSerializer = jsonResponseSerializer;
-        }
-        else if (configurator.responseSerializerType == HMClientResponseSerializerTypeRaw)
-        {
-            _responseSerializer = [[AFHTTPResponseSerializer alloc] init];
-        }
-        
-        // Configuring timout interval
-        _requestSerializer.timeoutInterval = configurator.timeoutInterval;
-        
-        // Configuring Language
-        self.insertAcceptLanguageHeader = YES;
-        self.insertLanguageAsParameter = NO;
-        self.languageParameterName = @"language";
-        
-        // Configuring serializers
-        _httpSessionManager.requestSerializer = _requestSerializer;
-        _httpSessionManager.responseSerializer = _responseSerializer;
-    }
-    return self;
+	if (!configuratorBlock)
+	{
+		NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:@"The configurator block cannot be nil!" userInfo:nil];
+		@throw exception;
+	}
+	
+	self = [super init];
+	if (self)
+	{
+		[self mjz_configureWithBlock:configuratorBlock];
+		
+	}
+	return self;
+}
+
+- (void)reconfigureWithConfigurator:(void (^_Nonnull)(HMClientConfigurator * _Nonnull configurator))configuratorBlock
+{
+	if (!configuratorBlock)
+	{
+		NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:@"The configurator block cannot be nil!" userInfo:nil];
+		@throw exception;
+	}
+	
+	if (self)
+	{
+		[self mjz_configureWithBlock:configuratorBlock];
+	}
 }
 
 #pragma mark Properties
@@ -211,6 +171,66 @@
 
 
 #pragma mark Private Methods
+
+- (void)mjz_configureWithBlock:(void (^)(HMClientConfigurator *))configuratorBlock
+{
+	HMClientConfigurator *configurator = [HMClientConfigurator new];
+	configurator.cacheManagement = HMClientCacheManagementDefault;
+	configurator.requestSerializerType = HMClientRequestSerializerTypeJSON;
+	configurator.responseSerializerType = HMClientResponseSerializerTypeJSON;
+	configurator.timeoutInterval = 60;
+	configuratorBlock(configurator);
+	
+	_serverPath = configurator.serverPath;
+	_apiPath = configurator.apiPath;
+	_cacheManagement = configurator.cacheManagement;
+	_completionBlockQueue = configurator.completionBlockQueue;
+	
+	// Configuring the cache management
+	if (configurator.cacheManagement == HMClientCacheManagementOffline)
+	{
+		_httpSessionManager = [[HMHTTPOfflineCacheSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_serverPath]];
+	}
+	else
+	{
+		_httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_serverPath]];
+	}
+	
+	// Request serializer
+	if (configurator.requestSerializerType == HMClientRequestSerializerTypeJSON)
+	{
+		_requestSerializer = [[AFJSONRequestSerializer alloc] init];
+	}
+	else if (configurator.requestSerializerType == HMClientRequestSerializerTypeFormUrlencoded)
+	{
+		_requestSerializer = [[AFHTTPRequestSerializer alloc] init];
+		[_requestSerializer setValue:@"application/x-www-form-urlencoded;charset=utf8" forHTTPHeaderField:@"Content-Type"];
+	}
+	
+	// Response serializer
+	if (configurator.responseSerializerType == HMClientResponseSerializerTypeJSON)
+	{
+		HMJSONResponseSerializer *jsonResponseSerializer = [[HMJSONResponseSerializer alloc] init];
+		jsonResponseSerializer.readingOptions = NSJSONReadingAllowFragments;
+		_responseSerializer = jsonResponseSerializer;
+	}
+	else if (configurator.responseSerializerType == HMClientResponseSerializerTypeRaw)
+	{
+		_responseSerializer = [[AFHTTPResponseSerializer alloc] init];
+	}
+	
+	// Configuring timout interval
+	_requestSerializer.timeoutInterval = configurator.timeoutInterval;
+	
+	// Configuring Language
+	self.insertAcceptLanguageHeader = YES;
+	self.insertLanguageAsParameter = NO;
+	self.languageParameterName = @"language";
+	
+	// Configuring serializers
+	_httpSessionManager.requestSerializer = _requestSerializer;
+	_httpSessionManager.responseSerializer = _responseSerializer;
+}
 
 - (NSString*)mjz_urlPathForRequest:(HMRequest*)request apiPath:(NSString*)apiPath
 {

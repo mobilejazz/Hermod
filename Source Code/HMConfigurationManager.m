@@ -18,7 +18,7 @@
 
 @interface HMConfiguration ()
 
-- (id)initWithDictionary:(NSDictionary *)dictionary;
+- (id)initWithDictionary:(NSDictionary *)dictionary environment:(HMEnvironment *)environment;
 
 @end
 
@@ -26,89 +26,89 @@
 
 - (id)initWithDictionary:(NSDictionary *)dictionary environment:(HMEnvironment *)environment
 {
-    self = [super init];
-    if (self)
-    {
-	_environment:(HMEnvironment *)environment;
-        _scheme = dictionary[@"scheme"];
-        if (!_scheme)
-        {
-            _scheme = @"http";
-        }
-
-        _host = dictionary[@"host"];
-
-        if (!_host)
-        {
-            NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException
-                                                             reason:@"Must provide a host"
-                                                           userInfo:nil];
-            @throw exception;
-        }
-
-        _path = dictionary[@"path"];
-
-        if (dictionary[@"port"])
-        {
-            _port = [dictionary[@"port"] integerValue];
-        }
-        else
-        {
-            _port = NSNotFound;
-        }
-
-        NSMutableDictionary *apiInfo = [dictionary mutableCopy];
-        [apiInfo removeObjectForKey:@"host"];
-        [apiInfo removeObjectForKey:@"scheme"];
-        [apiInfo removeObjectForKey:@"port"];
-        [apiInfo removeObjectForKey:@"path"];
-
-        if (apiInfo.count > 0)
-        {
-            _apiInfo = [apiInfo copy];
-        }
-    }
-    return self;
+	self = [super init];
+	if (self)
+	{
+		_environment = environment;
+		_scheme = dictionary[@"scheme"];
+		if (!_scheme)
+		{
+			_scheme = @"http";
+		}
+		
+		_host = dictionary[@"host"];
+		
+		if (!_host)
+		{
+			NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException
+															 reason:@"Must provide a host"
+														   userInfo:nil];
+			@throw exception;
+		}
+		
+		_path = dictionary[@"path"];
+		
+		if (dictionary[@"port"])
+		{
+			_port = [dictionary[@"port"] integerValue];
+		}
+		else
+		{
+			_port = NSNotFound;
+		}
+		
+		NSMutableDictionary *apiInfo = [dictionary mutableCopy];
+		[apiInfo removeObjectForKey:@"host"];
+		[apiInfo removeObjectForKey:@"scheme"];
+		[apiInfo removeObjectForKey:@"port"];
+		[apiInfo removeObjectForKey:@"path"];
+		
+		if (apiInfo.count > 0)
+		{
+			_apiInfo = [apiInfo copy];
+		}
+	}
+	return self;
 }
 
 - (NSString *)serverPath
 {
-    NSMutableString *string = [[NSMutableString alloc] init];
-
-    [string appendString:_scheme];
-
-    if (![_scheme hasSuffix:@"://"])
-    {
-        [string appendString:@"://"];
-    }
-
-    [string appendString:_host];
-
-    if (_port != NSNotFound)
-    {
-        [string appendFormat:@":%ld", (long)_port];
-    }
-
-    return [string copy];
+	NSMutableString *string = [[NSMutableString alloc] init];
+	
+	[string appendString:_scheme];
+	
+	if (![_scheme hasSuffix:@"://"])
+	{
+		[string appendString:@"://"];
+	}
+	
+	[string appendString:_host];
+	
+	if (_port != NSNotFound)
+	{
+		[string appendFormat:@":%ld", (long) _port];
+	}
+	
+	return [string copy];
 }
 
 - (NSString *)apiPath
 {
-    NSMutableString *string = [[NSMutableString alloc] init];
-
-    [string appendString:[self serverPath]];
-
-    if (_path.length > 0)
-    {
-        if (![_path hasPrefix:@"/"])
-        {
-            [string appendString:@"/"];
-        }
-
-        [string appendString:_path];
-    }
-
-    return [string copy];
+	NSMutableString *string = [[NSMutableString alloc] init];
+	
+	[string appendString:[self serverPath]];
+	
+	if (_path.length > 0)
+	{
+		if (![_path hasPrefix:@"/"])
+		{
+			[string appendString:@"/"];
+		}
+		
+		[string appendString:_path];
+	}
+	
+	return [string copy];
 }
 
 @end
@@ -116,40 +116,40 @@
 
 @implementation HMConfigurationManager
 {
-    NSDictionary *_plist;
-    NSMutableDictionary *_dictionary;
+	NSDictionary *_plist;
+	NSMutableDictionary *_dictionary;
 }
 
 - (id)initWithPlistFileName:(NSString *)fileName
 {
-    self = [super init];
-    if (self)
-    {
-        _fileName = fileName;
-
-        NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"plist"];
-        _plist = [NSDictionary dictionaryWithContentsOfFile:filePath];
-        _dictionary = [NSMutableDictionary dictionaryWithCapacity:_plist.count];
-    }
-    return self;
+	self = [super init];
+	if (self)
+	{
+		_fileName = fileName;
+		
+		NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"plist"];
+		_plist = [NSDictionary dictionaryWithContentsOfFile:filePath];
+		_dictionary = [NSMutableDictionary dictionaryWithCapacity:_plist.count];
+	}
+	return self;
 }
 
 - (HMConfiguration *)configurationForEnvironment:(HMEnvironment *)environment
 {
-    HMConfiguration *config = _dictionary[environment];
-
-    if (!config)
-    {
-        NSDictionary *dictionary = _plist[environment];
-
-        if (dictionary)
-        {
-            config = [[HMConfiguration alloc] initWithDictionary:dictionary environment:environment];
-            _dictionary[environment] = config;
-        }
-    }
-
-    return config;
+	HMConfiguration *config = _dictionary[environment];
+	
+	if (!config)
+	{
+		NSDictionary *dictionary = _plist[environment];
+		
+		if (dictionary)
+		{
+			config = [[HMConfiguration alloc] initWithDictionary:dictionary environment:environment];
+			_dictionary[environment] = config;
+		}
+	}
+	
+	return config;
 }
 
 - (NSArray <HMConfiguration *> *)configurationList
