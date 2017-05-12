@@ -66,6 +66,7 @@
         configurator.cacheManagement = HMClientCacheManagementDefault;
         configurator.requestSerializerType = HMClientRequestSerializerTypeJSON;
         configurator.responseSerializerType = HMClientResponseSerializerTypeJSON;
+        configurator.acceptableContentTypes = nil;
     }];
 }
 
@@ -85,6 +86,7 @@
         configurator.requestSerializerType = HMClientRequestSerializerTypeJSON;
         configurator.responseSerializerType = HMClientResponseSerializerTypeJSON;
         configurator.timeoutInterval = 60;
+        configurator.acceptableContentTypes = nil;
         configuratorBlock(configurator);
         
         _serverPath = configurator.serverPath;
@@ -124,6 +126,9 @@
         {
             _responseSerializer = [[AFHTTPResponseSerializer alloc] init];
         }
+
+        // Configuring response acceptable content types
+        _responseSerializer.acceptableContentTypes = configurator.acceptableContentTypes;
         
         // Configuring timout interval
         _requestSerializer.timeoutInterval = configurator.timeoutInterval;

@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, HMClientCacheManagement)
 {
     /** Default cache management. */
     HMClientCacheManagementDefault,
-    
+
     /** When offline (no reachability to the internet), cache will be used. */
     HMClientCacheManagementOffline
 };
@@ -41,7 +41,7 @@ typedef NS_OPTIONS(NSUInteger, HMClientLogLevel)
 {
     /** No logs will be done. */
     HMClientLogLevelNone         = 0,
-    
+
     /** Requests will be logged (including a curl). */
     HMClientLogLevelRequests     = 1 << 0,
     
@@ -62,7 +62,7 @@ typedef NS_OPTIONS(NSUInteger, HMClientResponseSerializerType)
 {
     /** JSON responses */
     HMClientResponseSerializerTypeJSON = 0,
-    
+
     /** RAW responses */
     HMClientResponseSerializerTypeRaw = 1,
 };
@@ -122,6 +122,11 @@ typedef NS_OPTIONS(NSUInteger, HMClientResponseSerializerType)
  * @discussion If nil, blocks will be executed on the main queue.
  **/
 @property (nonatomic, strong, readwrite, nullable) dispatch_queue_t completionBlockQueue;
+
+/**
+ * The acceptable MIME types for responses. When non-`nil`, responses with a `Content-Type` with MIME types that do not intersect with the set will result in an error during validation.
+ */
+@property (nonatomic, copy, nullable) NSSet <NSString *> *acceptableContentTypes;
 
 @end
 
