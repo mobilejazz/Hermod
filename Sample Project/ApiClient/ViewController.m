@@ -39,6 +39,7 @@ block();\
         
         configurator.cacheManagement = HMClientCacheManagementOffline;
         configurator.completionBlockQueue = dispatch_queue_create("com.mobilejazz.background-queue", DISPATCH_QUEUE_SERIAL);
+        configurator.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", nil];
     }];
     
     self.apiClient.logLevel = HMClientLogLevelRequests;
