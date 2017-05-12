@@ -3,6 +3,8 @@
 [![CocoaDocs](https://img.shields.io/badge/docs-%E2%9C%93-blue.svg)](http://cocoadocs.org/docsets/Hermod)
 <!--- [![Build Status](https://travis-ci.org/mobilejazz/Motis.png)](https://travis-ci.org/mobilejazz/Motis)-->
 
+![Hermod](https://raw.githubusercontent.com/mobilejazz/metadata/master/images/banners/mobile-jazz-hermod-ios.jpg)
+
 # Hermod
 User friendly HTTP client on top of AFNetworking
 
@@ -173,7 +175,7 @@ Finally, use the method `-apiClient:didReceiveErrorInResponse:` of `HMClientDele
 
 ### 2. HMOAuthSession (OAuth Support)
 
-In order to support OAuth, `HMClient` has the class `HMOAuthSession`. This class will keep the OAuth session alive and perform the fetch and refresh of tokens. Furthermore, it implements the `HMRequestExecutor` protocol in order to perform requests with OAuth support.
+In order to support OAuth, Hermod has the class `HMOAuthSession`. This class will keep the OAuth session alive and perform the fetch and refresh of tokens. Furthermore, it implements the `HMRequestExecutor` protocol in order to perform requests with OAuth support.
 
 #### 2.1 Configuration
 
@@ -278,3 +280,23 @@ The oauth session class `HMOAuthSession` has a delegate object which must implem
     // OAuth session access did change
 }
 ```
+
+## Project Maintainer
+
+This open source project is maintained by [Joan Martin](https://github.com/vilanovi).
+
+## License
+
+    Copyright 2016 Mobile Jazz
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.

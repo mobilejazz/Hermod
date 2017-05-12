@@ -23,6 +23,11 @@
 @interface HMConfiguration : NSObject
 
 /**
+ * @property The current environment name
+ **/
+@property (nonatomic, strong) HMEnvironment *environment;
+
+/**
  * @property The host. For example: www.mydomain.com
  **/
 @property (nonatomic, strong) NSString *host;
@@ -92,5 +97,10 @@
  *  - Use custom keys to get custom specified environments.
  **/
 - (HMConfiguration *)configurationForEnvironment:(HMEnvironment *)environment;
+
+/**
+ * @return  An Array of HMConfiguration objects. Return the list of API configuration available from the PLIST file.
+ */
+- (NSArray <HMConfiguration *> *)configurationList;
 
 @end
