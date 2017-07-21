@@ -30,7 +30,7 @@
  * Initializer for error responses.
  * @param request The original request.
  * @param response The HTTP headers response.
- * @param object The response object.
+ * @param responseObject The response object.
  * @param error The error.
  * @return An initialized instance.
  * @discussion The only class that creates api responses is the HMClient.

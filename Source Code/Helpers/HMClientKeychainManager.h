@@ -59,15 +59,15 @@
 - (void)setKeychainData:(NSData*)data forKey:(NSString*)key;
 
 /**
- * Retrieves the string for the given key.
+ * Retrieves the value (string) for the given key.
  * @param key The key.
  * @return The string stored in the keychain.
  **/
 - (NSString*)keychainValueForKey:(NSString*)key;
 
 /**
- * Set string for the given key.
- * @param string The data to store.
+ * Sets a value (string) for the given key.
+ * @param value The data to store.
  * @param key The key.
  **/
 - (void)setKeychainValue:(NSString*)value forKey:(NSString*)key;

@@ -197,7 +197,7 @@ typedef NS_OPTIONS(NSUInteger, HMClientResponseSerializerType)
 
 /**
  * Sets a barear token (typically from OAuth access tokens). Replaces the basic authentication header.
- * @param The authorization token.
+ * @param token The authorization token.
  * @discussion If nil, this method will remove the bearer token header.
  **/
 - (void)setBearerToken:(NSString * _Nullable)token;

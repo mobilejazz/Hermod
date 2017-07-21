@@ -26,7 +26,6 @@ typedef void (^HMResponseBlock)(HMResponse *response);
  * Performs an API request and call the completion block when finish.
  * @param request The API request.
  * @param completionBlock A completion block.
- * @return The task identifier.
  **/
 - (void)performRequest:(HMRequest*)request completionBlock:(HMResponseBlock)completionBlock;
 
@@ -35,7 +34,6 @@ typedef void (^HMResponseBlock)(HMResponse *response);
  * @param request The API request.
  * @param apiPath A custom API path (to be used instead of the default one).
  * @param completionBlock A completion block.
- * @return The task identifier.
  **/
 - (void)performRequest:(HMRequest*)request apiPath:(NSString*)apiPath completionBlock:(HMResponseBlock)completionBlock;
 

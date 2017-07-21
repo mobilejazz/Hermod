@@ -173,7 +173,7 @@ typedef NS_ENUM(NSUInteger, HMOAuthSesionAccess)
 /**
  * When obtaining and configuring a new oauth token, this method will be called.
  * @param session The session object.
- * @param oauthToken The oauth token.
+ * @param oauth The oauth token.
  * @param sessionAccess The oauth token session access level.
  **/
 - (void)session:(HMOAuthSession*)session didConfigureOAuth:(HMOAuth*)oauth forSessionAccess:(HMOAuthSesionAccess)sessionAccess;
