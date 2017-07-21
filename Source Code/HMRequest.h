@@ -18,6 +18,8 @@
 
 #import "HMConstants.h"
 
+extern NSTimeInterval const HMRequestDefaultTimeoutInterval;
+
 /**
  * A HMRequest object contains all the needed information to perform a HTTP request.
  **/
@@ -52,6 +54,12 @@
  * The dictionary parameters.
  **/
 @property (nonatomic, strong) NSDictionary *parameters;
+
+/**
+ * The timout interval used on this request. If it is set to `HMRequestDefaultTimeoutInterval`,
+ * the HMClient will use its default timeout. Default value is `HMRequestDefaultTimeoutInterval`.
+ **/
+@property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
 /** ************************************************* **
  * @name Identifying the request

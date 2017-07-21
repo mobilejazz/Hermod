@@ -141,7 +141,7 @@ typedef NS_OPTIONS(NSUInteger, HMClientResponseSerializerType)
 @interface HMClient : NSObject <HMRequestExecutor>
 
 /** ************************************************* **
- * @name Getting the default manager
+ * @name Main initializers
  ** ************************************************* **/
 
 /**
@@ -159,16 +159,15 @@ typedef NS_OPTIONS(NSUInteger, HMClientResponseSerializerType)
  */
 - (instancetype _Nonnull)initWithConfigurator:(void (^_Nonnull)(HMClientConfigurator * _Nonnull configurator))configuratorBlock;
 
-/**
- *Reconfigure the API client.
- *
- @param configuratorBlock A HMClientConfigurator block
- */
-- (void)reconfigureWithConfigurator:(void (^_Nonnull)(HMClientConfigurator * _Nonnull configurator))configuratorBlock;
-
 /** ************************************************* **
  * @name Configuring the client
  ** ************************************************* **/
+
+/**
+ * Reconfigure the API client.
+ * @param configuratorBlock A HMClientConfigurator block
+ **/
+- (void)reconfigureWithConfigurator:(void (^_Nonnull)(HMClientConfigurator * _Nonnull configurator))configuratorBlock;
 
 /**
  * The server path of the API client.
@@ -197,19 +196,26 @@ typedef NS_OPTIONS(NSUInteger, HMClientResponseSerializerType)
  ** ************************************************* **/
 
 /**
- * Set a barear token (typically from OAuth access tokens). Replaces the basic authentication header.
+ * Sets a barear token (typically from OAuth access tokens). Replaces the basic authentication header.
  * @param The authorization token.
  * @discussion If nil, this method will remove the bearer token header.
  **/
 - (void)setBearerToken:(NSString * _Nullable)token;
 
 /**
- * Set a basic authorization setup. Replaces the bearer token header.
+ * Sets a basic authorization setup. Replaces the bearer token header.
  * @param username The username.
  * @param password The password.
  * @discussion If username or password are nil (or both are nil), this method will remove the basic authentication header.
  **/
 - (void)setBasicAuthWithUsername:(NSString * _Nonnull)username password:(NSString * _Nonnull)password;
+
+/**
+ * Sets a generic "Authorization" value in the Header of the HTTP request.
+ * @param value The authorization value.
+ * @discussion If nil, this method will remove the authorization header.
+ **/
+- (void)setAuthorizationHeader:(NSString * _Nullable)value;
 
 /**
  * Clears all authorization headers.

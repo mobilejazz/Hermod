@@ -17,6 +17,8 @@
 #import "HMRequest.h"
 #import "NSString+HMClientMD5Hashing.h"
 
+NSTimeInterval const HMRequestDefaultTimeoutInterval = 0;
+
 @implementation HMRequest
 
 + (instancetype)requestWithPath:(NSString*)format, ...
@@ -38,6 +40,7 @@
     if (self)
     {
         _httpMethod = HMHTTPMethodGET;
+        _timeoutInterval = HMRequestDefaultTimeoutInterval;
     }
     return self;
 }
@@ -50,6 +53,7 @@
         _parameters = [coder decodeObjectForKey:@"parameters"];
         _httpMethod = [coder decodeIntegerForKey:@"httpMethod"];
         _path = [coder decodeObjectForKey:@"path"];
+        _timeoutInterval = [coder decodeIntegerForKey:@"timeoutInterval"];
     }
     return self;
 }
@@ -59,6 +63,7 @@
     [coder encodeObject:_parameters forKey:@"parameters"];
     [coder encodeInteger:_httpMethod forKey:@"httpMethod"];
     [coder encodeObject:_path forKey:@"path"];
+    [coder encodeInteger:_timeoutInterval forKey:@"timeoutInterval"];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone
@@ -68,6 +73,7 @@
     request.httpMethod = _httpMethod;
     request.parameters = [_parameters copy];
     request.path = [_path copy];
+    request.timeoutInterval = _timeoutInterval;
     
     return request;
 }
@@ -133,7 +139,7 @@
         string = [NSString stringWithFormat:@"%@/%lu/%@", _path, (unsigned long)_httpMethod, stringForDictionary(_parameters)];
     else
         string = [NSString stringWithFormat:@"%@/%lu/%@", _path, (unsigned long)_httpMethod, _parameters];
-
+    
     return [string mjz_api_md5_stringWithMD5Hash];
 }
 

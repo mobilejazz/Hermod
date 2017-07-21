@@ -82,7 +82,11 @@
 	if (self)
 	{
 		[self mjz_configureWithBlock:configuratorBlock];
-		
+        
+        // Configuring Language
+        self.insertAcceptLanguageHeader = YES;
+        self.insertLanguageAsParameter = NO;
+        self.languageParameterName = @"language";
 	}
 	return self;
 }
@@ -145,6 +149,18 @@
         [_httpSessionManager.requestSerializer setAuthorizationHeaderFieldWithUsername:username password:password];
     }
     else // if (username == nil && password == nil)
+    {
+        [self removeAuthorizationHeaders];
+    }
+}
+
+- (void)setAuthorizationHeader:(NSString *)value
+{
+    if (value)
+    {
+        [_httpSessionManager.requestSerializer setValue:value forHTTPHeaderField:@"Authorization"];
+    }
+    else
     {
         [self removeAuthorizationHeaders];
     }
@@ -225,12 +241,7 @@
 	
 	// Configuring timout interval
 	_requestSerializer.timeoutInterval = configurator.timeoutInterval;
-	
-	// Configuring Language
-	self.insertAcceptLanguageHeader = YES;
-	self.insertLanguageAsParameter = NO;
-	self.languageParameterName = @"language";
-	
+		
 	// Configuring serializers
 	_httpSessionManager.requestSerializer = _requestSerializer;
 	_httpSessionManager.responseSerializer = _responseSerializer;
@@ -309,6 +320,7 @@
     
     __block BOOL didFinish = NO;
     
+    // Defining task success completion block
     void (^taskCompletion)(NSURLSessionDataTask *, id) = ^(NSURLSessionDataTask *task, id responseObject)
     {
         didFinish = YES;
@@ -320,9 +332,9 @@
             error = [_delegate apiClient:self errorForResponseBody:responseObject httpResponse:httpResponse incomingError:nil];
         
         HMResponse *response = [[HMResponse alloc] initWithRequest:request
-                                                            httpResponse:httpResponse
-                                                                  object:responseObject
-                                                                   error:error];
+                                                      httpResponse:httpResponse
+                                                            object:responseObject
+                                                             error:error];
         
         if ((_logLevel & HMClientLogLevelResponses) != 0)
             NSLog(@"[ApiClient] RESPONSE: %@\n%@\n\n", error!=nil?@"FAILURE":@"SUCCESS", response.description);
@@ -341,6 +353,7 @@
         });
     };
     
+    // Defining task fail completion block
     void (^taskFailCompletion)(NSURLSessionDataTask *, NSError *) = ^(NSURLSessionDataTask *task, NSError *error) {
         
         didFinish = YES;
@@ -355,9 +368,9 @@
         }
         
         HMResponse *response = [[HMResponse alloc] initWithRequest:request
-                                                            httpResponse:httpResponse
-                                                                  object:body
-                                                                   error:error];
+                                                      httpResponse:httpResponse
+                                                            object:body
+                                                             error:error];
         
         if ((_logLevel & HMClientLogLevelResponses) != 0)
             NSLog(@"[ApiClient] RESPONSE: %@\n%@\n\n", error!=nil?@"FAILURE":@"SUCCESS", response.description);
@@ -376,95 +389,122 @@
         });
     };
     
-    if (httpMethod == HMHTTPMethodGET)
+    @synchronized (self)
     {
-        sessionDataTask = [_httpSessionManager GET:urlPath
-                                        parameters:parameters
-                                          progress:nil
-                                           success:taskCompletion
-                                           failure:taskFailCompletion];
-    }
-    else if (httpMethod == HMHTTPMethodPOST)
-    {
-        if ([request isKindOfClass:HMUploadRequest.class])
+        // Crating a synchronization block to manage the timeoutInterval. The synchrnonization will enforce the request serialization
+        // using the correct timetout defined in the HMRequest. The snchronization block will generate a semaphore that will be unlocked
+        // syncrhonously (there are no async calls involved in the unlock).
+        
+        // Storing the original timeout.
+        NSTimeInterval timeoutInterval = _requestSerializer.timeoutInterval;
+        BOOL customTimeoutInterval = (request.timeoutInterval != HMRequestDefaultTimeoutInterval);
+        
+        if (customTimeoutInterval)
         {
-            HMUploadRequest *uploadRequest = (id)request;
-            
-            NSMutableURLRequest *request = [_httpSessionManager.requestSerializer multipartFormRequestWithMethod:@"POST"
-                                                                                                       URLString:[[NSURL URLWithString:urlPath relativeToURL:_httpSessionManager.baseURL] absoluteString]
-                                                                                                      parameters:parameters
-                                                                                       constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                                                                                           [uploadRequest.uploadTasks enumerateObjectsUsingBlock:^(HMUploadTask *task, NSUInteger idx, BOOL *stop) {
-                                                                                               [formData appendPartWithFileData:task.data
-                                                                                                                           name:task.fieldName
-                                                                                                                       fileName:task.filename
-                                                                                                                       mimeType:task.mimeType];
-                                                                                           }];
-                                                                                       }
-                                                                                                           error:nil];
-            
-            sessionDataTask = [_httpSessionManager uploadTaskWithStreamedRequest:request
-                                                                        progress:nil
-                                                               completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
-                                                                   if (error)
-                                                                       taskFailCompletion(sessionDataTask, error);
-                                                                   else
-                                                                       taskCompletion(sessionDataTask, responseObject);
-                                                               }];
-            [sessionDataTask resume];
+            // If the request.timeoutInterval has been customized, configure the new timeout in the request serializer.
+            _requestSerializer.timeoutInterval = request.timeoutInterval;
         }
-        else
+        
+        // Executing the request (serializing it and then sending it via AFNetworking)
+        if (httpMethod == HMHTTPMethodGET)
         {
-            sessionDataTask = [_httpSessionManager POST:urlPath
+            sessionDataTask = [_httpSessionManager GET:urlPath
+                                            parameters:parameters
+                                              progress:nil
+                                               success:taskCompletion
+                                               failure:taskFailCompletion];
+        }
+        else if (httpMethod == HMHTTPMethodPOST)
+        {
+            if ([request isKindOfClass:HMUploadRequest.class])
+            {
+                HMUploadRequest *uploadRequest = (id)request;
+                
+                NSMutableURLRequest *request = [_httpSessionManager.requestSerializer multipartFormRequestWithMethod:@"POST"
+                                                                                                           URLString:[[NSURL URLWithString:urlPath relativeToURL:_httpSessionManager.baseURL] absoluteString]
+                                                                                                          parameters:parameters
+                                                                                           constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                                                                               [uploadRequest.uploadTasks enumerateObjectsUsingBlock:^(HMUploadTask *task, NSUInteger idx, BOOL *stop) {
+                                                                                                   [formData appendPartWithFileData:task.data
+                                                                                                                               name:task.fieldName
+                                                                                                                           fileName:task.filename
+                                                                                                                           mimeType:task.mimeType];
+                                                                                               }];
+                                                                                           }
+                                                                                                               error:nil];
+                
+                sessionDataTask = [_httpSessionManager uploadTaskWithStreamedRequest:request
+                                                                            progress:nil
+                                                                   completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
+                                                                       if (error)
+                                                                           taskFailCompletion(sessionDataTask, error);
+                                                                       else
+                                                                           taskCompletion(sessionDataTask, responseObject);
+                                                                   }];
+                [sessionDataTask resume];
+            }
+            else
+            {
+                sessionDataTask = [_httpSessionManager POST:urlPath
+                                                 parameters:parameters
+                                                   progress:nil
+                                                    success:taskCompletion
+                                                    failure:taskFailCompletion];
+            }
+        }
+        else if (httpMethod == HMHTTPMethodPUT)
+        {
+            sessionDataTask = [_httpSessionManager PUT:urlPath
+                                            parameters:parameters
+                                               success:taskCompletion
+                                               failure:taskFailCompletion];
+        }
+        else if (httpMethod == HMHTTPMethodDELETE)
+        {
+            sessionDataTask = [_httpSessionManager DELETE:urlPath
+                                               parameters:parameters
+                                                  success:taskCompletion
+                                                  failure:taskFailCompletion];
+        }
+        else if (httpMethod == HMHTTPMethodHEAD)
+        {
+            sessionDataTask = [_httpSessionManager HEAD:urlPath
                                              parameters:parameters
-                                               progress:nil
-                                                success:taskCompletion
+                                                success:^(NSURLSessionDataTask *task) {
+                                                    taskCompletion(task, nil);
+                                                }
                                                 failure:taskFailCompletion];
         }
-    }
-    else if (httpMethod == HMHTTPMethodPUT)
-    {
-        sessionDataTask = [_httpSessionManager PUT:urlPath
-                                        parameters:parameters
-                                           success:taskCompletion
-                                           failure:taskFailCompletion];
-    }
-    else if (httpMethod == HMHTTPMethodDELETE)
-    {
-        sessionDataTask = [_httpSessionManager DELETE:urlPath
-                                           parameters:parameters
-                                              success:taskCompletion
-                                              failure:taskFailCompletion];
-    }
-    else if (httpMethod == HMHTTPMethodHEAD)
-    {
-        sessionDataTask = [_httpSessionManager HEAD:urlPath
-                                         parameters:parameters
-                                            success:^(NSURLSessionDataTask *task) {
-                                                taskCompletion(task, nil);
-                                            }
-                                            failure:taskFailCompletion];
-    }
-    else if (httpMethod == HMHTTPMethodPATCH)
-    {
-        sessionDataTask = [_httpSessionManager PATCH:urlPath
-                                          parameters:parameters
-                                             success:^(NSURLSessionDataTask *task, id responseObject) {
-                                                 taskCompletion(task, nil);
-                                             }
-                                             failure:taskFailCompletion];
+        else if (httpMethod == HMHTTPMethodPATCH)
+        {
+            sessionDataTask = [_httpSessionManager PATCH:urlPath
+                                              parameters:parameters
+                                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                                     taskCompletion(task, nil);
+                                                 }
+                                                 failure:taskFailCompletion];
+        }
+        
+        if (customTimeoutInterval)
+        {
+            // After serializing the request, configuring back the request serializer with the original timeout interval.
+            _requestSerializer.timeoutInterval = timeoutInterval;
+        }
     }
     
     if ((_logLevel & HMClientLogLevelRequests) != 0)
     {
 #if TARGET_OS_IOS
+        // If enabled, logging a CURL of the request
         NSString *curl = [TTTURLRequestFormatter cURLCommandFromURLRequest:sessionDataTask.originalRequest];
         NSLog(@"[ApiClient] REQUEST:\n%@\n%@\n\n", request.description, curl);
 #else
+        // If enabled, logging the request description
         NSLog(@"[ApiClient] REQUEST:\n%@\n\n", request.description);
 #endif
     }
     
+    // Finally, setting the original NSURLRequest tot the HMRequest for later inspection.
     request.finalURLRequest = sessionDataTask.originalRequest;
 }
 
