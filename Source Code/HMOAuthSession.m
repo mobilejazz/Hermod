@@ -122,7 +122,7 @@
 
 #pragma mark Public Methods
 
-- (void)validateOAuth:(void (^)())block
+- (void)validateOAuth:(void (^)(void))block
 {
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
         

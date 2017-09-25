@@ -132,7 +132,7 @@ typedef NS_ENUM(NSUInteger, HMOAuthSesionAccess)
  * Performs a block ensuring the validity of the session access tokens.
  * @discussion If a oauth object is about to expire or expired, the session will attepmt to refresh credentials before calling the block.
  **/
-- (void)validateOAuth:(void (^)())completionBlock;
+- (void)validateOAuth:(void (^)(void))completionBlock;
 
 /**
  * Deletes the user and app token.
