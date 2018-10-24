@@ -16,6 +16,7 @@
 
 #import "HMRequest.h"
 #import "NSString+HMClientMD5Hashing.h"
+#import "NSDictionary+DescriptionHelpers.h"
 
 NSTimeInterval const HMRequestDefaultTimeoutInterval = 0;
 
@@ -54,6 +55,7 @@ NSTimeInterval const HMRequestDefaultTimeoutInterval = 0;
         _httpMethod = [coder decodeIntegerForKey:@"httpMethod"];
         _path = [coder decodeObjectForKey:@"path"];
         _timeoutInterval = [coder decodeIntegerForKey:@"timeoutInterval"];
+        _sensitiveParameterKeyPahts = [coder decodeObjectForKey:@"sensitiveParameterKeyPahts"];
     }
     return self;
 }
@@ -64,6 +66,7 @@ NSTimeInterval const HMRequestDefaultTimeoutInterval = 0;
     [coder encodeInteger:_httpMethod forKey:@"httpMethod"];
     [coder encodeObject:_path forKey:@"path"];
     [coder encodeInteger:_timeoutInterval forKey:@"timeoutInterval"];
+    [coder encodeObject:_sensitiveParameterKeyPahts forKey:@"sensitiveParameterKeyPahts"];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone
@@ -74,6 +77,7 @@ NSTimeInterval const HMRequestDefaultTimeoutInterval = 0;
     request.parameters = [_parameters copy];
     request.path = [_path copy];
     request.timeoutInterval = _timeoutInterval;
+    request.sensitiveParameterKeyPahts = [_sensitiveParameterKeyPahts copy];
     
     return request;
 }
@@ -109,7 +113,7 @@ NSTimeInterval const HMRequestDefaultTimeoutInterval = 0;
             self.identifier,
             _path,
             NSStringFromHMHTTPMethod(_httpMethod),
-            _parameters.description];
+            [_parameters hm_descriptionRemovingKeyPaths:self.sensitiveParameterKeyPahts]];
 }
 
 #pragma mark Public Methods

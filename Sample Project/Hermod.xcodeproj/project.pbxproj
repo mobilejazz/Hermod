@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0082ED3E2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082ED3C2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.m */; };
 		5277E9351D1D3AD6004613F7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5277E9341D1D3AD6004613F7 /* main.m */; };
 		5277E9381D1D3AD6004613F7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5277E9371D1D3AD6004613F7 /* AppDelegate.m */; };
 		5277E93B1D1D3AD6004613F7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5277E93A1D1D3AD6004613F7 /* ViewController.m */; };
@@ -46,6 +47,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0082ED3C2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+DescriptionHelpers.m"; sourceTree = "<group>"; };
+		0082ED3D2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+DescriptionHelpers.h"; sourceTree = "<group>"; };
 		5277E9311D1D3AD5004613F7 /* Hermod- TVOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hermod- TVOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5277E9341D1D3AD6004613F7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5277E9361D1D3AD6004613F7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -269,6 +272,8 @@
 				D203B7AE1BCE74990088C315 /* HMClientKeychainManager.m */,
 				D204290C1AC401D1002F18FD /* NSString+HMClientMD5Hashing.h */,
 				D204290D1AC401D1002F18FD /* NSString+HMClientMD5Hashing.m */,
+				0082ED3D2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.h */,
+				0082ED3C2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -481,6 +486,7 @@
 				D20429051AC4019D002F18FD /* HMConstants.m in Sources */,
 				529D82861B74F51C00EEC7FB /* HMHTTPOfflineCacheSessionManager.m in Sources */,
 				D2FEE5EC1D91668A00443CD6 /* HMConfigurationManager.m in Sources */,
+				0082ED3E2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

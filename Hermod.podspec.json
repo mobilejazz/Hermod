@@ -1,6 +1,6 @@
 {
   "name": "Hermod",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "summary": "User friendly HTTP client on top of AFNetworking",
   "description": "Hermod defines a simple, easy to use, intuitive and flexible HTTP client on top of AFNetworking.",
   "homepage": "https://github.com/mobilejazz/Hermod",

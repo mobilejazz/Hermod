@@ -61,6 +61,11 @@ extern NSTimeInterval const HMRequestDefaultTimeoutInterval;
  **/
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
+/**
+ The keyPaths included in this array will not be logged.
+ */
+@property (nonatomic, strong, readwrite) NSArray<NSString *> *sensitiveParameterKeyPahts;
+
 /** ************************************************* **
  * @name Identifying the request
  ** ************************************************* **/
