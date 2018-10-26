@@ -18,7 +18,7 @@
   "social_media_url": "http://twitter.com/mobilejazzcom",
   "source": {
     "git": "https://github.com/mobilejazz/Hermod.git",
-    "tag": "1.1.1"
+    "tag": "1.1.2"
   },
   "source_files": [
 	  "Source Code/*.{h,m}",
