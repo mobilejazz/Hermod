@@ -12,8 +12,7 @@
     "Mobile Jazz": "info@mobilejazz.com"
   },
   "platforms": {
-    "ios": "9.0",
-	"osx": "10.9"
+    "ios": "9.0"
   },
   "social_media_url": "http://twitter.com/mobilejazzcom",
   "source": {
