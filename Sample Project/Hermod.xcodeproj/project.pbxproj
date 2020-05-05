@@ -14,6 +14,7 @@
 		5277E93E1D1D3AD6004613F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5277E93C1D1D3AD6004613F7 /* Main.storyboard */; };
 		5277E9401D1D3AD6004613F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5277E93F1D1D3AD6004613F7 /* Assets.xcassets */; };
 		529D82861B74F51C00EEC7FB /* HMHTTPOfflineCacheSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 529D82851B74F51C00EEC7FB /* HMHTTPOfflineCacheSessionManager.m */; };
+		64AE92F0C99FCD5F6F650E16 /* libPods-Hermod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94E6CE96545A7FA276C953AA /* libPods-Hermod.a */; };
 		D203B7AB1BCE72F80088C315 /* HMOAuthSession.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7A81BCE72F80088C315 /* HMOAuthSession.m */; };
 		D203B7AC1BCE72F80088C315 /* HMOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AA1BCE72F80088C315 /* HMOAuth.m */; };
 		D203B7AF1BCE74990088C315 /* HMClientKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7AE1BCE74990088C315 /* HMClientKeychainManager.m */; };
@@ -33,7 +34,6 @@
 		D204290E1AC401D1002F18FD /* NSString+HMClientMD5Hashing.m in Sources */ = {isa = PBXBuildFile; fileRef = D204290D1AC401D1002F18FD /* NSString+HMClientMD5Hashing.m */; };
 		D2FEE5EC1D91668A00443CD6 /* HMConfigurationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FEE5EB1D91668A00443CD6 /* HMConfigurationManager.m */; };
 		D2FEE5EE1D916B3200443CD6 /* API-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = D2FEE5ED1D916B3200443CD6 /* API-Config.plist */; };
-		DE2CFF81A93A99E436401803 /* libPods-ApiClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADDDEBD80308DCA1647FA3D6 /* libPods-ApiClient.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +49,8 @@
 /* Begin PBXFileReference section */
 		0082ED3C2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+DescriptionHelpers.m"; sourceTree = "<group>"; };
 		0082ED3D2180A1FC004E4556 /* NSDictionary+DescriptionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+DescriptionHelpers.h"; sourceTree = "<group>"; };
+		3448ECF8EB942076F6574E4D /* Pods-Hermod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hermod.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Hermod/Pods-Hermod.debug.xcconfig"; sourceTree = "<group>"; };
+		4FC7F4FAE07B30B35FD9A408 /* Pods-Hermod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hermod.release.xcconfig"; path = "Pods/Target Support Files/Pods-Hermod/Pods-Hermod.release.xcconfig"; sourceTree = "<group>"; };
 		5277E9311D1D3AD5004613F7 /* Hermod- TVOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hermod- TVOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5277E9341D1D3AD6004613F7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5277E9361D1D3AD6004613F7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -61,7 +63,7 @@
 		529D82841B74F51C00EEC7FB /* HMHTTPOfflineCacheSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMHTTPOfflineCacheSessionManager.h; sourceTree = "<group>"; };
 		529D82851B74F51C00EEC7FB /* HMHTTPOfflineCacheSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMHTTPOfflineCacheSessionManager.m; sourceTree = "<group>"; };
 		63F43286D44C9E5E0B3EF530 /* Pods-ApiClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ApiClient/Pods-ApiClient.debug.xcconfig"; sourceTree = "<group>"; };
-		ADDDEBD80308DCA1647FA3D6 /* libPods-ApiClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ApiClient.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		94E6CE96545A7FA276C953AA /* libPods-Hermod.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hermod.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAB33E8BA957285D42E38EC3 /* Pods-ApiClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApiClient/Pods-ApiClient.release.xcconfig"; sourceTree = "<group>"; };
 		D203B7A71BCE72F80088C315 /* HMOAuthSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMOAuthSession.h; sourceTree = "<group>"; };
 		D203B7A81BCE72F80088C315 /* HMOAuthSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMOAuthSession.m; sourceTree = "<group>"; };
@@ -115,7 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE2CFF81A93A99E436401803 /* libPods-ApiClient.a in Frameworks */,
+				64AE92F0C99FCD5F6F650E16 /* libPods-Hermod.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +136,8 @@
 			children = (
 				63F43286D44C9E5E0B3EF530 /* Pods-ApiClient.debug.xcconfig */,
 				BAB33E8BA957285D42E38EC3 /* Pods-ApiClient.release.xcconfig */,
+				3448ECF8EB942076F6574E4D /* Pods-Hermod.debug.xcconfig */,
+				4FC7F4FAE07B30B35FD9A408 /* Pods-Hermod.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -164,7 +168,7 @@
 		6476E885DD32463E1892FC72 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				ADDDEBD80308DCA1647FA3D6 /* libPods-ApiClient.a */,
+				94E6CE96545A7FA276C953AA /* libPods-Hermod.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -306,7 +310,6 @@
 				D20428C81AC400F3002F18FD /* Sources */,
 				D20428C91AC400F3002F18FD /* Frameworks */,
 				D20428CA1AC400F3002F18FD /* Resources */,
-				37A050BDE805D65323B74AE6 /* [CP] Embed Pods Frameworks */,
 				1A815DE291C3C0A5D61413C7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -350,7 +353,7 @@
 					};
 					D20428CB1AC400F3002F18FD = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 3VP5WS89TZ;
+						DevelopmentTeam = 63NXUR5JKS;
 					};
 					D20428E41AC400F3002F18FD = {
 						CreatedOnToolsVersion = 6.2;
@@ -363,6 +366,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -415,28 +419,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Hermod/Pods-Hermod-resources.sh",
+				"${PODS_ROOT}/FormatterKit/Localizations/en.lproj",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/en.lproj",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiClient/Pods-ApiClient-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		37A050BDE805D65323B74AE6 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiClient/Pods-ApiClient-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Hermod/Pods-Hermod-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B5DFE03AE50668B07F58ECEA /* [CP] Check Pods Manifest.lock */ = {
@@ -445,13 +437,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Hermod-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -669,11 +664,12 @@
 		};
 		D20428F01AC400F3002F18FD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 63F43286D44C9E5E0B3EF530 /* Pods-ApiClient.debug.xcconfig */;
+			baseConfigurationReference = 3448ECF8EB942076F6574E4D /* Pods-Hermod.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 3VP5WS89TZ;
+				DEVELOPMENT_TEAM = 63NXUR5JKS;
 				INFOPLIST_FILE = ApiClient/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mobilejazz.Hermod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -683,11 +679,12 @@
 		};
 		D20428F11AC400F3002F18FD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BAB33E8BA957285D42E38EC3 /* Pods-ApiClient.release.xcconfig */;
+			baseConfigurationReference = 4FC7F4FAE07B30B35FD9A408 /* Pods-Hermod.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 3VP5WS89TZ;
+				DEVELOPMENT_TEAM = 63NXUR5JKS;
 				INFOPLIST_FILE = ApiClient/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mobilejazz.Hermod;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -4,11 +4,11 @@ inhibit_all_warnings!
 # Defining the workspace
 workspace 'Hermod'
 
-target 'ApiClient' do
+target 'Hermod' do
   xcodeproj 'Hermod.xcodeproj'
   
   # HMClient dependencies
-  pod 'AFNetworking', '~> 3.1.0'
+  pod 'AFNetworking', '~>4.0'
   pod 'FormatterKit/URLRequestFormatter', '~>1.8.0'  
 end
 

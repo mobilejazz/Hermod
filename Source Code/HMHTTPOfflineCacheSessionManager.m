@@ -69,8 +69,11 @@
             [copyRequest setCachePolicy:NSURLRequestUseProtocolCachePolicy];
             break;
     }
-    
-    return [super dataTaskWithRequest:copyRequest completionHandler:completionHandler];
+        
+    return     [super dataTaskWithRequest:copyRequest
+                uploadProgress:nil
+              downloadProgress:nil
+             completionHandler:completionHandler];
 }
 
 @end

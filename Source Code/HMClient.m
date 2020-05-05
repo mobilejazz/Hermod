@@ -410,6 +410,7 @@
         {
             sessionDataTask = [_httpSessionManager GET:urlPath
                                             parameters:parameters
+                                               headers:nil
                                               progress:nil
                                                success:taskCompletion
                                                failure:taskFailCompletion];
@@ -447,6 +448,7 @@
             {
                 sessionDataTask = [_httpSessionManager POST:urlPath
                                                  parameters:parameters
+                                                    headers:nil
                                                    progress:nil
                                                     success:taskCompletion
                                                     failure:taskFailCompletion];
@@ -456,6 +458,7 @@
         {
             sessionDataTask = [_httpSessionManager PUT:urlPath
                                             parameters:parameters
+                                               headers:nil
                                                success:taskCompletion
                                                failure:taskFailCompletion];
         }
@@ -463,6 +466,7 @@
         {
             sessionDataTask = [_httpSessionManager DELETE:urlPath
                                                parameters:parameters
+                                                  headers:nil
                                                   success:taskCompletion
                                                   failure:taskFailCompletion];
         }
@@ -470,6 +474,7 @@
         {
             sessionDataTask = [_httpSessionManager HEAD:urlPath
                                              parameters:parameters
+                                                headers:nil
                                                 success:^(NSURLSessionDataTask *task) {
                                                     taskCompletion(task, nil);
                                                 }
@@ -479,6 +484,7 @@
         {
             sessionDataTask = [_httpSessionManager PATCH:urlPath
                                               parameters:parameters
+                                                 headers:nil
                                                  success:^(NSURLSessionDataTask *task, id responseObject) {
                                                      taskCompletion(task, nil);
                                                  }
